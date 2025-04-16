@@ -1,6 +1,3 @@
----
-permalink: /assets/js/google-analytics-setup.js
----
 window.dataLayer = window.dataLayer || [];
 function gtag() {
   window.dataLayer.push(arguments);

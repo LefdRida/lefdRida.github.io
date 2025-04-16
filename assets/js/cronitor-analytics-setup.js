@@ -1,6 +1,3 @@
----
-permalink: /assets/js/cronitor-analytics-setup.js
----
 window.cronitor =
   window.cronitor ||
   function () {
