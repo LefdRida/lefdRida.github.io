@@ -6,6 +6,8 @@ description:
 tags: 
 categories: Technical-post
 related_posts: false
+toc: false
+related_publicatio: false
 ---
 
 ```python 
