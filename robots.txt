@@ -1,0 +1,4 @@
+User-agent: *
+Disallow:
+
+Sitemap: https://lefdRida.github.io/sitemap.xml
