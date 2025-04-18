@@ -11,25 +11,26 @@
         <span class="p">)</span>
 </code></pre></div></div> <p>The <em>bidirectional</em> argument is set to True to specify a biderctional GRU. If it is set to False then we have normal GRU</p> <h3 id="self-attention">Self Attention</h3> <p>The attention mechanism was developed in encoder-decoder architecture for NMT context and then used for other context. The attention also used in encoder only settings and it is called self or inner attention. Self attention is the core component of transformers.</p> <p>The idea behind attention is to use for prediction a weighted sum, where all the weights are determined using trainable parameters, of the all hidden states \((h_{1}, h_{2}, …, h_{T})\) rather than using the last hidden state which is prone to information loss.</p> <p>The hidden states are passed to a dense layer (eq 3). The alignment coefficient are computed by comparing the output of the dense layer with a trainable context vector u and normalized using Softmax (eq 4). The attentional vector is computed then using a weighted sum of hidden states with alignment coefficient as weights (eq 5).</p> <p>\begin{equation}u_t = tanh(W h_t) \end{equation} \begin{equation}\alpha_t = \frac{exp(u_{t}^{T}u)}{\sum_{t’=1}^{T}exp(u_{t’}^{T}u)} \end{equation} \begin{equation}s = \sum_{t=1}^{T}\alpha_{t}h_{t}\end{equation}</p> <p>The self attention can be implemented as follows using Pytorch</p> <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">torch</span>
 <span class="kn">from</span> <span class="n">torch</span> <span class="kn">import</span> <span class="n">nn</span>
+<span class="kn">from</span> <span class="n">torch.utils.data</span> <span class="kn">import</span> <span class="n">DataLoader</span>
+
 
 <span class="k">class</span> <span class="nc">AttentionWithContext</span><span class="p">(</span><span class="n">nn</span><span class="p">.</span><span class="n">Module</span><span class="p">):</span>
     <span class="sh">"""</span><span class="s">
-    Follows the work of Yang et al. [https://www.cs.cmu.edu/~diyiy/docs/naacl16.pdf]
-    </span><span class="sh">"</span><span class="s">Hierarchical Attention Networks for Document Classification</span><span class="sh">"</span><span class="s">
-    by using a context vector to assist the attention
-    # Input shape
-        3D tensor with shape: `(samples, steps, features)`.
-    # Output shape
-        2D tensor with shape: `(samples, steps)`.
+    Class implementing self attention mechanism:
+    u_t = tanh(W . x_t)
+    a_t = (u_t^T . u)/sum(u_i^T . u)
+    s = sum(a_t * x_t)
     </span><span class="sh">"""</span>
-
+  
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">,</span> <span class="n">return_coefficients</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
         <span class="nf">super</span><span class="p">(</span><span class="n">AttentionWithContext</span><span class="p">,</span> <span class="n">self</span><span class="p">).</span><span class="nf">__init__</span><span class="p">()</span>
         <span class="n">self</span><span class="p">.</span><span class="n">return_coefficients</span> <span class="o">=</span> <span class="n">return_coefficients</span>
 
-        <span class="n">self</span><span class="p">.</span><span class="n">W</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="nc">Linear</span><span class="p">(</span><span class="n">input_shape</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="n">bias</span><span class="p">)</span>
+        <span class="c1"># Dense Layer W
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">W</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="nc">Linear</span><span class="p">(</span><span class="n">input_shape</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="n">bias</span><span class="p">)</span>
         <span class="n">self</span><span class="p">.</span><span class="n">tanh</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="nc">Tanh</span><span class="p">()</span>
-        <span class="n">self</span><span class="p">.</span><span class="n">u</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="nc">Linear</span><span class="p">(</span><span class="n">input_shape</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+        <span class="c1"># Trainable context vector u 
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">u</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="nc">Linear</span><span class="p">(</span><span class="n">input_shape</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 
         <span class="n">self</span><span class="p">.</span><span class="nf">init_weights</span><span class="p">()</span>
 
@@ -39,31 +40,24 @@
         <span class="n">self</span><span class="p">.</span><span class="n">W</span><span class="p">.</span><span class="n">bias</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="nf">uniform_</span><span class="p">(</span><span class="o">-</span><span class="n">initrange</span><span class="p">,</span> <span class="n">initrange</span><span class="p">)</span>
         <span class="n">self</span><span class="p">.</span><span class="n">u</span><span class="p">.</span><span class="n">weight</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="nf">uniform_</span><span class="p">(</span><span class="o">-</span><span class="n">initrange</span><span class="p">,</span> <span class="n">initrange</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">generate_square_subsequent_mask</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">sz</span><span class="p">):</span>
-        <span class="c1"># do not pass the mask to the next layers
-</span>        <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">torch</span><span class="p">.</span><span class="nf">triu</span><span class="p">(</span><span class="n">torch</span><span class="p">.</span><span class="nf">ones</span><span class="p">(</span><span class="n">sz</span><span class="p">,</span> <span class="n">sz</span><span class="p">))</span> <span class="o">==</span> <span class="mi">1</span><span class="p">).</span><span class="nf">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">mask</span><span class="p">.</span><span class="nf">float</span><span class="p">()</span>
-            <span class="p">.</span><span class="nf">masked_fill</span><span class="p">(</span><span class="n">mask</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="nf">float</span><span class="p">(</span><span class="sh">"</span><span class="s">-inf</span><span class="sh">"</span><span class="p">))</span>
-            <span class="p">.</span><span class="nf">masked_fill</span><span class="p">(</span><span class="n">mask</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="nf">float</span><span class="p">(</span><span class="mf">0.0</span><span class="p">))</span>
-        <span class="p">)</span>
-        <span class="k">return</span> <span class="n">mask</span>
-
-    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-        <span class="n">uit</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nc">W</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>  <span class="c1"># fill the gap # compute uit = W . x  where x represents ht
-</span>        <span class="n">uit</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">tanh</span><span class="p">(</span><span class="n">uit</span><span class="p">)</span>
-        <span class="n">ait</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">u</span><span class="p">(</span><span class="n">uit</span><span class="p">)</span>
-        <span class="n">a</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">exp</span><span class="p">(</span><span class="n">ait</span><span class="p">)</span>
-
-        <span class="c1"># apply mask after the exp. will be re-normalized next
-</span>        <span class="k">if</span> <span class="n">mask</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="n">a</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="n">mask</span><span class="p">.</span><span class="nf">double</span><span class="p">()</span>
-
+   
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">h</span><span class="p">):</span>
+        <span class="c1"># compute uit = tanh(W . h)  where h are the hidden states
+</span>        <span class="n">uit</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nc">W</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>  
+        <span class="n">uit</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">tanh</span><span class="p">(</span><span class="n">uit</span><span class="p">)</span> <span class="c1">#(N, L, d) --&gt; (N, L, d)
+</span>        
+        <span class="c1"># compute the attention coefficient alphas : u_t^T . u
+</span>        <span class="n">ait</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">u</span><span class="p">(</span><span class="n">uit</span><span class="p">)</span> <span class="c1">#(N, L, 1) --&gt; (N, L, 1)
+</span>        <span class="c1">#Normalizing with softmax
+</span>        <span class="n">a</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">exp</span><span class="p">(</span><span class="n">ait</span><span class="p">)</span>
         <span class="c1"># in some cases especially in the early stages of training the sum may be almost zero
 </span>        <span class="c1"># and this results in NaN's. A workaround is to add a very small positive number ε to the sum.
 </span>        <span class="n">eps</span> <span class="o">=</span> <span class="mf">1e-9</span>
-        <span class="n">a</span> <span class="o">=</span> <span class="n">a</span> <span class="o">/</span> <span class="p">(</span><span class="n">torch</span><span class="p">.</span><span class="nf">sum</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span> <span class="o">+</span> <span class="n">eps</span><span class="p">)</span>
-        <span class="n">weighted_input</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">sum</span><span class="p">(</span><span class="n">torch</span><span class="p">.</span><span class="nf">mul</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">x</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">a</span> <span class="o">/</span> <span class="p">(</span><span class="n">torch</span><span class="p">.</span><span class="nf">sum</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span> <span class="o">+</span> <span class="n">eps</span><span class="p">)</span> <span class="c1">#(N, L, 1) --&gt; (N, L, 1)
+</span>        
+        <span class="c1"># Compute the attentional vector : s = sum(a_t * x_t)
+</span>        <span class="n">weighted_input</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">sum</span><span class="p">(</span><span class="n">torch</span><span class="p">.</span><span class="nf">mul</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">h</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        
         <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">return_coefficients</span><span class="p">:</span>
             <span class="nf">return </span><span class="p">(</span>
                 <span class="n">weighted_input</span><span class="p">,</span>
@@ -71,51 +65,52 @@
             <span class="p">)</span>  <span class="c1">### [attentional vector, coefficients] ### use torch.sum to compute s
 </span>        <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">weighted_input</span>  <span class="c1">### attentional vector only ###
-</span></code></pre></div></div> <p>The attention mechanism can provide similar summation weights for all the hidden states. So, a penalization term to encourage the diversity of summation weight vectors. The penalization term is as follows:</p> \[P = {\lVert (AA^{T} - I) \rVert}_{F}^{2}\] <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+</span></code></pre></div></div> <p>The attention mechanism can provide similar summation weights for all the hidden states. A penalization term was proposed by [9] to encourage the diversity of summation weight vectors. The penalization term is as follows:</p> \[P = {\lVert (AA^{T} - I) \rVert}_{F}^{2}\] <p>where F refer to the frobenius norm of a matrix \({\lVert A \rVert}_{F}^{2} = \sum_{i=1}^{n}\sum_{j=1}^{n} a_{i}_{j}^{2}\)</p> <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="k">def</span> <span class="nf">Frobenius</span><span class="p">(</span><span class="n">mat</span><span class="p">):</span>
     <span class="n">size</span> <span class="o">=</span> <span class="n">mat</span><span class="p">.</span><span class="nf">size</span><span class="p">()</span>
     <span class="k">if</span> <span class="nf">len</span><span class="p">(</span><span class="n">size</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>  <span class="c1"># batched matrix
-</span>        <span class="n">ret</span> <span class="o">=</span> <span class="p">(</span><span class="n">torch</span><span class="p">.</span><span class="nf">sum</span><span class="p">(</span><span class="n">torch</span><span class="p">.</span><span class="nf">sum</span><span class="p">((</span><span class="n">mat</span> <span class="o">**</span> <span class="mi">2</span><span class="p">),</span> <span class="mi">2</span><span class="p">),</span> <span class="mi">1</span><span class="p">).</span><span class="nf">squeeze</span><span class="p">()</span> <span class="o">+</span> <span class="mf">1e-10</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span>
+</span>        <span class="n">ret</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">sum</span><span class="p">(</span><span class="n">torch</span><span class="p">.</span><span class="nf">sum</span><span class="p">((</span><span class="n">mat</span> <span class="o">**</span> <span class="mi">2</span><span class="p">),</span> <span class="mi">2</span><span class="p">),</span> <span class="mi">1</span><span class="p">).</span><span class="nf">squeeze</span><span class="p">()</span> <span class="o">+</span> <span class="mf">1e-10</span>
         <span class="k">return</span> <span class="n">torch</span><span class="p">.</span><span class="nf">sum</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span> <span class="o">/</span> <span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="nc">Exception</span><span class="p">(</span><span class="sh">'</span><span class="s">matrix for computing Frobenius norm should be with 3 dims</span><span class="sh">'</span><span class="p">)</span>
 
-<span class="n">I</span> <span class="o">=</span> <span class="nc">Variable</span><span class="p">(</span><span class="n">torch</span><span class="p">.</span><span class="nf">zeros</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="mi">210</span><span class="p">,</span> <span class="mi">210</span><span class="p">))</span>
+<span class="c1"># Create a batch of indentity matrices of size L where L represent tha length of the sequence.
+</span><span class="n">I</span> <span class="o">=</span> <span class="nc">Variable</span><span class="p">(</span><span class="n">torch</span><span class="p">.</span><span class="nf">zeros</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">L</span><span class="p">))</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="n">batch_size</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="mi">7</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="n">L</span><span class="p">):</span>
         <span class="n">I</span><span class="p">.</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
-
-<span class="n">A_T</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">transpose</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">).</span><span class="nf">contiguous</span><span class="p">()</span>
+<span class="c1">#Computing the penalization term
+</span><span class="n">A_T</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">transpose</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">).</span><span class="nf">contiguous</span><span class="p">()</span>
 <span class="n">P</span> <span class="o">=</span> <span class="nc">Frobenius</span><span class="p">(</span><span class="n">torch</span><span class="p">.</span><span class="nf">bmm</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">A_T</span><span class="p">)</span> <span class="o">-</span> <span class="n">I</span><span class="p">[:</span><span class="n">A</span><span class="p">.</span><span class="nf">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)])</span> 
 </code></pre></div></div> <h3 id="hierarchical-attention-network---han">Hierarchical Attention Network - HAN</h3> <p>Hierarchical Attention Network is an interesting architecture which use self attention and was proposed by [5]. The architecture contains many level and each level is RNNs followed by self attention layer. Which makes this architecture suitable for data that has a hierarchy e.g word —&gt; sentence —&gt; document. First, a sentence encoder produces an embedding for each sentence from word embeddings; then a document encoder produces the document embedding vector from the sentence embeddings previously produced. Each encoder is a Bidir GRU followed by a self attention.</p> <p>HAN makes sense for two reason: First it matches the natural hierarchy of a document; second; it allows the model to first determine which words are important in each sentence and then which sentence are important overall.</p> <p>By being able to re-weight the word attentional coefficients by the sentence attentional coefficients the model captures the fact that a word may be very important in a sentence but it’s less important in another sentence.</p> <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">AttentionBiGRU</span><span class="p">(</span><span class="n">nn</span><span class="p">.</span><span class="n">Module</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">,</span> <span class="n">n_units</span><span class="p">,</span> <span class="n">index_to_word</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="nf">super</span><span class="p">(</span><span class="n">AttentionBiGRU</span><span class="p">,</span> <span class="n">self</span><span class="p">).</span><span class="nf">__init__</span><span class="p">()</span>
         <span class="n">self</span><span class="p">.</span><span class="n">embedding</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="nc">Embedding</span><span class="p">(</span>
-            <span class="nf">len</span><span class="p">(</span><span class="n">index_to_word</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span>  <span class="c1"># fill the gap # vocab size
+            <span class="nf">len</span><span class="p">(</span><span class="n">index_to_word</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="c1"># vocab size
 </span>            <span class="n">d</span><span class="p">,</span>  <span class="c1"># dimensionality of embedding space
 </span>            <span class="n">padding_idx</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">self</span><span class="p">.</span><span class="n">dropout</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="nc">Dropout</span><span class="p">(</span><span class="n">drop_rate</span><span class="p">)</span>
         <span class="n">self</span><span class="p">.</span><span class="n">gru</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="nc">GRU</span><span class="p">(</span>
-            <span class="n">input_size</span><span class="o">=</span><span class="n">d</span><span class="p">,</span><span class="c1">#input_shape[2],
-</span>            <span class="n">hidden_size</span><span class="o">=</span><span class="n">n_units</span><span class="p">,</span>
+            <span class="n">input_size</span><span class="o">=</span><span class="n">d</span><span class="p">,</span>
+            <span class="n">hidden_size</span><span class="o">=</span><span class="n">n_units</span><span class="p">,</span>
             <span class="n">num_layers</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> 
             <span class="n">bias</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
             <span class="n">batch_first</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
             <span class="n">bidirectional</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">self</span><span class="p">.</span><span class="n">attention</span> <span class="o">=</span> <span class="nc">AttentionWithContext</span><span class="p">(</span>
-            <span class="mi">2</span> <span class="o">*</span> <span class="n">n_units</span><span class="p">,</span>  <span class="c1"># fill the gap # the input shape for the attention layer
+            <span class="mi">2</span> <span class="o">*</span> <span class="n">n_units</span><span class="p">,</span>  <span class="c1"># the input shape for the attention layer
 </span>            <span class="n">return_coefficients</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
         <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">sent_ints</span><span class="p">):</span>
         <span class="n">sent_wv</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">embedding</span><span class="p">(</span><span class="n">sent_ints</span><span class="p">)</span>
         <span class="n">sent_wv_dr</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">dropout</span><span class="p">(</span><span class="n">sent_wv</span><span class="p">)</span>
-        <span class="n">sent_wa</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">gru</span><span class="p">(</span><span class="n">sent_wv_dr</span><span class="p">)</span>  <span class="c1"># fill the gap # RNN layer
+        <span class="n">sent_wa</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">gru</span><span class="p">(</span><span class="n">sent_wv_dr</span><span class="p">)</span>  <span class="c1"># GRU layer
 </span>        <span class="n">sent_att_vec</span><span class="p">,</span> <span class="n">word_att_coeffs</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">attention</span><span class="p">(</span>
             <span class="n">sent_wa</span>
-        <span class="p">)</span>  <span class="c1"># fill the gap # attentional vector for the sent
+        <span class="p">)</span>  <span class="c1"># attentional vector for the sent
 </span>        <span class="n">sent_att_vec_dr</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">dropout</span><span class="p">(</span><span class="n">sent_att_vec</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">sent_att_vec_dr</span><span class="p">,</span> <span class="n">word_att_coeffs</span>
 
@@ -159,7 +154,7 @@
         <span class="n">self</span><span class="p">.</span><span class="n">timeDistributed</span> <span class="o">=</span> <span class="nc">TimeDistributed</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">encoder</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
         <span class="n">self</span><span class="p">.</span><span class="n">dropout</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="nc">Dropout</span><span class="p">(</span><span class="n">drop_rate</span><span class="p">)</span>
         <span class="n">self</span><span class="p">.</span><span class="n">gru</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="nc">GRU</span><span class="p">(</span>
-            <span class="n">input_size</span><span class="o">=</span><span class="mi">2</span> <span class="o">*</span> <span class="n">n_units</span><span class="p">,</span>  <span class="c1"># fill the gap # the input shape of GRU layer
+            <span class="n">input_size</span><span class="o">=</span><span class="mi">2</span> <span class="o">*</span> <span class="n">n_units</span><span class="p">,</span>  <span class="c1"># the input shape of GRU layer
 </span>            <span class="n">hidden_size</span><span class="o">=</span><span class="n">n_units</span><span class="p">,</span>
             <span class="n">num_layers</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
             <span class="n">bias</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
@@ -168,18 +163,18 @@
         <span class="p">)</span>
         <span class="n">self</span><span class="p">.</span><span class="n">attention</span> <span class="o">=</span> <span class="nc">AttentionWithContext</span><span class="p">(</span>
             <span class="mi">2</span>
-            <span class="o">*</span> <span class="n">n_units</span><span class="p">,</span>  <span class="c1"># fill the gap # the input shape of between-sentence attention layer
+            <span class="o">*</span> <span class="n">n_units</span><span class="p">,</span>  <span class="c1"># the input shape of between-sentence attention layer
 </span>            <span class="n">return_coefficients</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">self</span><span class="p">.</span><span class="n">lin_out</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="nc">Linear</span><span class="p">(</span>
-            <span class="mi">2</span> <span class="o">*</span> <span class="n">n_units</span><span class="p">,</span> <span class="mi">1</span>  <span class="c1"># fill the gap # the input size of the last linear layer
+            <span class="mi">2</span> <span class="o">*</span> <span class="n">n_units</span><span class="p">,</span> <span class="mi">1</span>  <span class="c1"># the input size of the last linear layer
 </span>        <span class="p">)</span>
         <span class="n">self</span><span class="p">.</span><span class="n">preds</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="nc">Sigmoid</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">doc_ints</span><span class="p">):</span>
         <span class="n">sent_att_vecs_dr</span><span class="p">,</span> <span class="n">word_att_coeffs</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">timeDistributed</span><span class="p">(</span>
             <span class="n">doc_ints</span>
-        <span class="p">)</span>  <span class="c1"># fill the gap # get sentence representation
+        <span class="p">)</span>  <span class="c1"># get sentence representation
 </span>        <span class="n">doc_sa</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">gru</span><span class="p">(</span><span class="n">sent_att_vecs_dr</span><span class="p">)</span>
         <span class="n">doc_att_vec</span><span class="p">,</span> <span class="n">sent_att_coeffs</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">attention</span><span class="p">(</span><span class="n">doc_sa</span><span class="p">)</span>
         <span class="n">doc_att_vec_dr</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">dropout</span><span class="p">(</span><span class="n">doc_att_vec</span><span class="p">)</span>
@@ -200,8 +195,8 @@ array([  130,    14,     6,  1991,    28,    22,  2746, 17943,    13,
 <span class="n">lr</span> <span class="o">=</span> <span class="mf">0.001</span>  <span class="c1"># learning rate
 </span><span class="n">criterion</span> <span class="o">=</span> <span class="p">(</span>
     <span class="n">nn</span><span class="p">.</span><span class="nc">BCELoss</span><span class="p">()</span>
-<span class="p">)</span>  <span class="c1"># fill the gap, use Binary cross entropy from torch.nn: https://pytorch.org/docs/stable/nn.html#loss-functions
-</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">optim</span><span class="p">.</span><span class="nc">Adam</span><span class="p">(</span><span class="n">model</span><span class="p">.</span><span class="nf">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="n">lr</span><span class="p">)</span>  <span class="c1"># fill me
+<span class="p">)</span>  <span class="c1"># Binary cross entropy from torch.nn: https://pytorch.org/docs/stable/nn.html#loss-functions
+</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">optim</span><span class="p">.</span><span class="nc">Adam</span><span class="p">(</span><span class="n">model</span><span class="p">.</span><span class="nf">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="n">lr</span><span class="p">)</span>  <span class="c1"># Adam optimizer
 </span>
 <span class="k">def</span> <span class="nf">train</span><span class="p">(</span>
     <span class="n">x_train</span><span class="o">=</span><span class="n">my_docs_array_train</span><span class="p">,</span>
@@ -231,11 +226,11 @@ array([  130,    14,     6,  1991,    28,    22,  2746, 17943,    13,
                 <span class="n">label</span> <span class="o">=</span> <span class="n">label</span><span class="p">.</span><span class="nf">double</span><span class="p">()</span>
                 <span class="n">out</span> <span class="o">=</span> <span class="n">model</span><span class="p">.</span><span class="nf">forward</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
                 <span class="n">output</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">][:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-                <span class="n">loss</span> <span class="o">=</span> <span class="nf">criterion</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span>   <span class="c1"># fill the gap # compute the loss
+                <span class="n">loss</span> <span class="o">=</span> <span class="nf">criterion</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span>    <span class="c1"># compute the loss
 </span>                <span class="n">loss</span><span class="p">.</span><span class="nf">backward</span><span class="p">()</span>
                 <span class="n">torch</span><span class="p">.</span><span class="n">nn</span><span class="p">.</span><span class="n">utils</span><span class="p">.</span><span class="nf">clip_grad_norm_</span><span class="p">(</span>
                     <span class="n">model</span><span class="p">.</span><span class="nf">parameters</span><span class="p">(),</span> <span class="mf">0.5</span>
-                <span class="p">)</span>  <span class="c1"># prevent exploding gradient
+                <span class="p">)</span>  <span class="c1"># Clipping to prevent exploding gradient
 </span>                <span class="n">optimizer</span><span class="p">.</span><span class="nf">step</span><span class="p">()</span>
 
                 <span class="n">losses</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">loss</span><span class="p">.</span><span class="nf">item</span><span class="p">())</span>
