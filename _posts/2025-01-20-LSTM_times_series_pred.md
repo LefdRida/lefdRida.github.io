@@ -11,7 +11,7 @@ related_posts: false
 
 In this post we will cover LSTM through time series forecasting. The aim is to explain LSTM and its advantage regarding RNNs. We will cover an application of Energy consumption and cover also some statistical algorithm for comparison. 
 
-As we explain previously RNN takes as input as sequence and output a sequece of hidden states. Each unit in RNN take as input as input the an element from sequence and the hidden state of the previous element from the sequence. 
+As we explained previously RNN takes as input a sequence of elements and outputs a sequece of hidden states. Each unit in RNN take as input an element from sequence and the hidden state of the previous element from the sequence. 
 Dealing with sequences makes RNN suitable for making prediction using time series as data. Time series is a sequence of elements, that could be real value, images or texts, that is ordered in a chronological order. 
 
 A first problem of RNN is its inability to perform well on tasks that require the use of information distant from the current point of procssing. The hidden states tends to be local and relevant only the most recent parts of the input sequence. The second problem is vanishing gradients, as during training the error needs to backpropagate through time and then we have repeated multiplications which results in that gradients are eventualy driven to zero.
