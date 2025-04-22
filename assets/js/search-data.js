@@ -48,6 +48,17 @@ ninja.data = [{
             window.location.href = "/posts/2025/hello_world/";
           
         },
+      },{id: "post-energy-forecasting-with-lstm",
+        
+          title: "Energy Forecasting with LSTM",
+        
+        description: "",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/posts/2025/LSTM_times_series_pred/";
+          
+        },
       },{id: "post-rnn-and-hierarchical-attention-network",
         
           title: "RNN and Hierarchical Attention Network",
