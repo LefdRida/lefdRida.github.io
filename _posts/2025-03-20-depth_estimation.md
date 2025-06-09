@@ -131,7 +131,7 @@ for i, row in sub_data.iterrows():
 visualize_point(all_point=gt_blendedmvs_data, eval_mode=False)
 ```
 
-** Figure of examples **
+**Figure of examples**
 
 For the blended mvs we have alse the images masked, which mean images containing only the object of interest. as you can see in the example below. Sometimes we have images of walls or containing scenes taking from extreme angles eg top-down view. This kind of images will make the task a little bit harder. We eliminate this type of image by thresholding on the number of black pixel presents in the image. 
 
@@ -199,7 +199,8 @@ The final depth is estimated through a convolution that takes all the depth map 
 
 to estimate the depth shift and focal length shift. As in [6] we have neural network based on PointNet to predict the depth shift or focal length shift given a input of distorted point cloud: 
 
-$L_{depth\ shift} = min_θ |N_d(F(u₀, v₀, f^{*}, d^{*} + ∆^{*}_d), θ) − ∆^{*}_d|$ where $∆^{*}_d$ is drawn from a uniform distribution $\text{Uniform}(-0.25, 0.8)$ during training
+$$L_{depth\ shift} = min_θ |N_d(F(u₀, v₀, f^{*}, d^{*} + ∆^{*}_d), θ) − ∆^{*}_d|$$
+where $∆^{*}_d$ is drawn from a uniform distribution $\text{Uniform}(-0.25, 0.8)$ during training
 
 $L_{focal\ scale} = min_θ |N_d(F(u₀, v₀, \alpha^{*}f^{*}, d^{*}), θ) − \alpha^{*}|$ where $\alpha^{*}$ is drawn from a uniform distribution $\text{Uniform}(0.6, 1.25)$ during training
 
