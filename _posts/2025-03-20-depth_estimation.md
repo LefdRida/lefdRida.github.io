@@ -6,8 +6,8 @@ description:
 tags: 
 categories: Technical-post
 related_posts: false
-pretty_table: true
 ---
+
 
 ### 3D Task
 
