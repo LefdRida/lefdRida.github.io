@@ -200,6 +200,7 @@ The final depth is estimated through a convolution that takes all the depth map 
 to estimate the depth shift and focal length shift. As in [6] we have neural network based on PointNet to predict the depth shift or focal length shift given a input of distorted point cloud: 
 
 $$L_{depth\ shift} = min_θ |N_d(F(u₀, v₀, f^{*}, d^{*} + ∆^{*}_d), θ) − ∆^{*}_d|$$
+
 where $∆^{*}_d$ is drawn from a uniform distribution $\text{Uniform}(-0.25, 0.8)$ during training
 
 $L_{focal\ scale} = min_θ |N_d(F(u₀, v₀, \alpha^{*}f^{*}, d^{*}), θ) − \alpha^{*}|$ where $\alpha^{*}$ is drawn from a uniform distribution $\text{Uniform}(0.6, 1.25)$ during training
