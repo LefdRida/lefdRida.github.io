@@ -242,7 +242,7 @@ $$L(d^{~}, d) = \frac{1}{n}\sum_{p}{||ln(d^{*}_{p}) - ln(d_{p})||^{2}} - \frac{1
 
 for evaluation we consider the following metrics used in the literature: 
 
-- **Accuracy under a threshold** $\delta$ % of $ p  :  \delta = max(\frac{\hat{d}_p}{d_p}, \frac{d_p}{\hat{d}_p}) < threshold $
+- **Accuracy under a threshold** $\delta$ % of $$p  :  \delta = max(\frac{\hat{d}_p}{d_p}, \frac{d_p}{\hat{d}_p}) < threshold$$
 
 - **Abs. Rel.:** Mean Absolute Value of the Relative Error. $$\frac{1}{T} \sum_{p \in T} \left| \frac{d_p - \hat{d}_p}{d_p} \right|$$
 
