@@ -244,7 +244,7 @@ for evaluation we consider the following metrics used in the literature:
 
 - **Accuracy under a threshold** $\delta$ % of $$p  :  \delta = max(\frac{\hat{d}_p}{d_p}, \frac{d_p}{\hat{d}_p}) < threshold$$
 
-- **Abs. Rel.:** Mean Absolute Value of the Relative Error. $$\frac{1}{T} \sum_{p \in T} \left| \frac{d_p - \hat{d}_p}{d_p} \right|$$
+- **Abs. Rel.:** Mean Absolute Value of the Relative Error. $$\frac{1}{T} \sum_{p \in T} |\frac{d_p - \hat{d}_p}{d_p}|$$
 
 #### Implementation
 
