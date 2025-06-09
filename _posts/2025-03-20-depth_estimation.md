@@ -199,11 +199,11 @@ The final depth is estimated through a convolution that takes all the depth map 
 
 to estimate the depth shift and focal length shift. As in [6] we have neural network based on PointNet to predict the depth shift or focal length shift given a input of distorted point cloud: 
 
-$$L_{depth\ shift} = min_θ |N_d(F(u₀, v₀, f^{*}, d^{*} + ∆^{*}_d), θ) − ∆^{*}_d|$$
+$$L_{depth\ shift} = min_{\theta} |N_d(F(u_0, v_0, f^{*}, d^{*} + ∆^{*}_d), \theta) − ∆^{*}_d|$$
 
-where $∆^{*}_d$ is drawn from a uniform distribution $\text{Uniform}(-0.25, 0.8)$ during training
+where $$∆^{*}_d$$ is drawn from a uniform distribution $$\text{Uniform}(-0.25, 0.8)$$ during training
 
-$L_{focal\ scale} = min_θ |N_d(F(u₀, v₀, \alpha^{*}f^{*}, d^{*}), θ) − \alpha^{*}|$ where $\alpha^{*}$ is drawn from a uniform distribution $\text{Uniform}(0.6, 1.25)$ during training
+$$L_{focal\ scale} = min_{\theta} |N_d(F(u_0, v_0, \alpha^{*}f^{*}, d^{*}), \theta) − \alpha^{*}|$$ where $$\alpha^{*}$$ is drawn from a uniform distribution $$\text{Uniform}(0.6, 1.25)$$ during training
 
 
 The network used for focal scale estimation and depth shift estimation is a PoinNet [9] applied for regression task. The network takes as input a 3D point cloud (B, N, 3) and apply an **input transformation block** followed by a 1D conv layer to extract features. A **feature transformation block** is applied on the extracted and followed by a series of 1D conv operation to result in a vector of global feature using a max aggregation. The max pooling is used to have invariance w.t.r point cloud order.
