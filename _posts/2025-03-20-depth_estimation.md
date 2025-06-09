@@ -238,13 +238,13 @@ For blendedMVS we are eliminating some objects that corresponds to views of wall
 The depth estimation, focal length scale estimation or depth shift estimation are regression task. For the loss will be based of L1 or MSE loss 
 In depth estimation many losses function have been proposed in the literature such as Huber Loss, silog loss, ordinal regression loss. In our case, we will use scale invariance log which computes the error between the ground truth and the prediction without taking into account the scale discrepency.So, it consider only the relative error between the values.
 
-$L(d^{~}, d) = \frac{1}{n}\sum_{p}{||ln(d^{*}_{p}) - ln(d_{p})||^{2}} - \frac{1}{n^{2}}(\sum_{p}{(ln(d^{*}_{p}) - ln(d_{p}))})^{2}$
+$$L(d^{~}, d) = \frac{1}{n}\sum_{p}{||ln(d^{*}_{p}) - ln(d_{p})||^{2}} - \frac{1}{n^{2}}(\sum_{p}{(ln(d^{*}_{p}) - ln(d_{p}))})^{2}$$
 
 for evaluation we consider the following metrics used in the literature: 
 
 - **Accuracy under a threshold** $\delta$ % of $ p  :  \delta = max(\frac{\hat{d}_p}{d_p}, \frac{d_p}{\hat{d}_p}) < threshold $
 
-- **Abs. Rel.:** Mean Absolute Value of the Relative Error. $ \frac{1}{T} \sum_{p \in T} \left| \frac{d_p - \hat{d}_p}{d_p} \right| $ 
+- **Abs. Rel.:** Mean Absolute Value of the Relative Error. $$\frac{1}{T} \sum_{p \in T} \left| \frac{d_p - \hat{d}_p}{d_p} \right|$$
 
 #### Implementation
 
