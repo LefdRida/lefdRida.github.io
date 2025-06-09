@@ -189,10 +189,15 @@ The decoder begins by applying $3\times3$ up-convolution to the last feature map
 $$c = \frac{n_{4}}{n_{1}u_{i} + n_{2}v_{i} + n_{3}} \qquad  \text{ where } \quad n = (n_{1}, n_{2}, n_{3}, n_{4}) \text{ where are the estimated 4D parameters}$$
 $$\qquad \text{and } (u_{i}, v_{i}) \text{  are $k\times k$ patch wise normalized coordinate of pixel $i$ }$$
 The $n$ parameters are the plane parameters where $(n_{1}, n_{2}, n_{3})$ is the normal vector and $n_{4}$ is the distance from the origine to the plane. To estimate these parameters, they use the fact that a normal vector can be computed using two angles, polars and azimuthal, using the the following formulas: (more details in the Appendix)
+
 $$n_{1} = sin(\theta)cos(\phi)$$
+
 $$n_{2} = sin(\theta)sin(\phi)$$
+
 $$n_{3} = cos(\theta)$$
+
 $$n_{4} = d$$ 
+
 To estimates these three parameters at the scale $H/k$, the LPG takes as input the feature of the previous fusion module, i.e feature at scale $H/2k$, and pass them through a series of $1\times1$ convolution to reduce the number of channels by a factor of $2$ until it reaches $3$. So the final convolution layer of the LPG estimates $\theta$, $\phi$ and $d$. More details about the computation are in the implementation of this module.
 Thus using the LPG, we have an estimation of depth map at different scales. The lower scales learns the global shapes and the higher scales learns local details. 
 The final depth is estimated through a convolution that takes all the depth map at each scale
@@ -203,7 +208,9 @@ $$L_{depth\ shift} = min_{\theta} |N_d(F(u_0, v_0, f^{*}, d^{*} + ∆^{*}_d), \t
 
 where $$∆^{*}_d$$ is drawn from a uniform distribution $$\text{Uniform}(-0.25, 0.8)$$ during training
 
-$$L_{focal\ scale} = min_{\theta} |N_d(F(u_0, v_0, \alpha^{*}f^{*}, d^{*}), \theta) − \alpha^{*}|$$ where $$\alpha^{*}$$ is drawn from a uniform distribution $$\text{Uniform}(0.6, 1.25)$$ during training
+$$L_{focal\ scale} = min_{\theta} |N_d(F(u_0, v_0, \alpha^{*}f^{*}, d^{*}), \theta) − \alpha^{*}|$$
+
+where $$\alpha^{*}$$ is drawn from a uniform distribution $$\text{Uniform}(0.6, 1.25)$$ during training
 
 
 The network used for focal scale estimation and depth shift estimation is a PoinNet [9] applied for regression task. The network takes as input a 3D point cloud (B, N, 3) and apply an **input transformation block** followed by a 1D conv layer to extract features. A **feature transformation block** is applied on the extracted and followed by a series of 1D conv operation to result in a vector of global feature using a max aggregation. The max pooling is used to have invariance w.t.r point cloud order.
