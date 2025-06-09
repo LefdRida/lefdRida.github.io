@@ -37,7 +37,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/cv/";
           },
-        },{id: "post-hello-world",
+        },{id: "post-depth-estimation",
+        
+          title: "Depth Estimation",
+        
+        description: "",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/posts/2025/depth_estimation/";
+          
+        },
+      },{id: "post-hello-world",
         
           title: "Hello World",
         
