@@ -206,7 +206,7 @@ to estimate the depth shift and focal length shift. As in [6] we have neural net
 
 $$L_{depth\ shift} = min_{\theta} |N_d(F(u_0, v_0, f^{*}, d^{*} + ∆^{*}_d), \theta) − ∆^{*}_d|$$
 
-where $$∆^{*}_d$$ is drawn from a uniform distribution $$\text{Uniform}(-0.25, 0.8)$$ during training
+where $$\delta^{*}_d$$ is drawn from a uniform distribution $$\text{Uniform}(-0.25, 0.8)$$ during training
 
 $$L_{focal\ scale} = min_{\theta} |N_d(F(u_0, v_0, \alpha^{*}f^{*}, d^{*}), \theta) − \alpha^{*}|$$
 
