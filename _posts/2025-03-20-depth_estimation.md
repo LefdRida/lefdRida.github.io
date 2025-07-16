@@ -135,12 +135,11 @@ For depth map estimation eigen et al [1] introduced a CNN model levereging on mu
 
 We will use BTS model for this task. BTS has an encoder-decoder architecture. The encoder outputs a dense feature map of $H/8$ resolution. The decoding phase consists of $4$ stages. Each stage $k$, (with $k \in {8, 4, 2, 1}$) takes a dense feature map of $H/k$ resolution and apply two operations:
 1. We apply an up-convolution operation to have a feature map of resolution of $2H/k$. 
-2. We apply local planar guidance to produce a coarse depth map $\tild{c}^{k\timesk}$ of resolution $H$ which downsampled using linear interpolation to a resolution of $2H/k$
+2. We apply local planar guidance to produce a coarse depth map $\tilde{c}^{k\times k}$ of resolution $H$ which downsampled using linear interpolation to a resolution of $2H/k$
 The output of these two operations are element-wise multiplied and passed through a convolution operation to have the input feature map of resolution $2H/k$ for the next stage. 
 
 To have the estimated depth map $d$, all the coersed depth map produced by the local planar guidance are used together as follows:
-$$d = f{W_1 \tild{c}^{1\times 1} + W_2 \tild{c}^{2\times 2} + W_3 \tild{c}^{4\times 4} + W_4\tild{c}^{8\times 8})$$ 
-
+$$d = f\{W_1 \tilde{c}^{1 \times 1} + W_2 \tilde{c}^{2\times 2} + W_3 \tilde{c}^{4\times 4} + W_4\tilde{c}^{8\times 8}\)$$ 
 
 - **the LPG module:**  Given a feature map having a spatial resolution $H/k$, it estimates $4D$ plane coefficient for each spatial cell to reconstruct a coarse depth that fit a locally defined $k\times k$ patch on the full resolution. The LPG uses ray-plane intersection to convert each estimated 4D plane coefficient to $k\times k$ local depth cues on the full resolution:
 $$c = \frac{n_{4}}{n_{1}u_{i} + n_{2}v_{i} + n_{3}} \qquad  \text{ where } \quad n = (n_{1}, n_{2}, n_{3}, n_{4}) \text{ where are the estimated 4D parameters}$$
