@@ -9,81 +9,72 @@ related_posts: false
 ---
 
 
-### 3D Task
+### Monocular 3D Mapping
 
-The task aims to train a neural network $f$ to map an Image $ I \in\mathbb{R}^{M\times N \times 3}$ to 3D cloud points $X \in\mathbb{R}^{M \times N \times 3}$. This means, the model has to map each pixel in the 2D image to its corresponding point in the 3D space. 
+Depth estimation is a task consisting of estimating the distance of each pixel realtive to the camera to result in a depth map. Using the depth map with some camera parameters, explained later, we can map an image $ I \in\mathbb{R}^{M\times N \times 3}$ to its 3D point cloud $X \in\mathbb{R}^{M \times N \times 3}$. This means, we can map each pixel in the 2D image to its corresponding point in the 3D space. 
+
+A camera projects a 3D point in the real worl to a 2D point on the image. This transformation can be modeled using matrix multiplication using the intersic camera parameters and extrinsic camera parameters. 
+The camera extrinsic matrix (parameters), denoted $E$, is used to map a 3D point in the real world reference to a 3D point cloud in the camera reference.
+The camera intrinsic matrix (parameters), denoted $K$ is, used to map a 3D camera centered point to a 2D point on the image plane.
+
+The matrix $K$ and $E$ are defined as follows: 
 
 
-The work on this task is carried on Kaggle which offers 30H/week of usage of GPU with 16GB of VRAM.
-
-
-### Dataset:
-
-During this task, datasets such as blendedMVS or NUY depth have been considered. The datasets contains scene images with their depth map and camera intrinsic and extrinsic matrices, denoted $D$, $K$ and $E$ respectively.
-
-Where: 
-
-\begin{equation} K = 
+$$ \left\lbrace
+\begin{aligned}
+& K = 
 \begin{pmatrix}
 &f_x  &0   & c_x  \\
 &0   &f_y   & c_y  \\
 &0   &0   & 1  \\
 \end{pmatrix}
-\text{such that $(f_{x}, f_{y})$ are the focal lengths of the camera and $(c_{x}, c_{y})$ is the camera optical center.}
-\end{equation} 
-
-
-and 
-
-\begin{equation} E = [R|T] =
+\substack{\text{such that $(f_{x}, f_{y})$ are the focal lengths of the camera} \\ \text{and $(c_{x}, c_{y})$ is the camera optical center.}} \\
+\text{and}\\
+& E = [R|T] =
 \begin{pmatrix}
 &r_{11}   &r_{12}   & r_{13} & t_{1} \\
 &r_{21}   &r_{22}   & r_{23} & t_{2} \\
 &r_{31}   &r_{32}   & r_{33} & t_{3} \\
 \end{pmatrix} 
-\text{which contains the rotation matrix and translation vector}
-\end{equation} 
+\substack{\text{which contains the rotation matrix} \\ \text{and translation vector}} \\
+\end{aligned}
+\right. $$
 
-So, Given the intrinsic matrix $K$ and the depth map $D$, and using the pinhole camera model, we can map each pixel $p_{i}=(x_{i}, y_{i})^{T}$ in the 2D image plane to its corresponding the 3D point $P_{i} = (X_{i}, Y_{i}, Z_{i})^{T}$
-in the camera referential using the schema below: 
 
-$$X_{i} = \frac{(x_{i} - cx)Z_{i}}{f_x}$$
-$$Y_{i} = \frac{(y_{i} - cy)Z_{i}}{f_y}$$
-$$Z_{i} = D(x_{i}, y_{i}) \quad \text{(the depth value corresponding to the pixel $p_{i}$) } \\ \\$$
+So, given the intrinsic matrix $K$ and the depth map $D$, and using the pinhole camera model, we can map each pixel $p_{i}=(x_{i}, y_{i})^{T}$ in the 2D image plane to its corresponding the 3D point in the camera referential $P_{c, i} = (X_{c, i}, Y_{c, i}, Z_{c, i})^{T}$
+using the schema below: 
 
+$$ \left\lbrace
+\begin{aligned}
+& X_{c, i} = \frac{(x_{i} - c_x)Z_{c, i}}{f_x}\\
+& Y_{c, i} = \frac{(y_{i} - c_y)Z_{c, i}}{f_y}\\
+& Z_{c, i} = D(x_{i}, y_{i}) \quad \text{(the depth value corresponding to the pixel $p_{i}$)}
+\end{aligned}
+\right. $$
+
+We will be interested in only on mapping the image pixel to its 3D point in the camera referential.\
 
 To map to the 3D real world space, we can use the relationshape between a point in the camera referential $P_{c}$ and its corresponding point in the real world referential $P_{r}$, which is:
-$$P_{c} = RP_{r} + T  \quad \text{where $P_{r} = (X_{r}, Y_{r}, Z_{r})^{T}$,  $T$ and $R$ are the translation vector and rotation matrices}$$
-$$RP_{r} = P_{c} - T$$
-$$P_{r} = R^{T}(P_{c} - T) \quad \text{The rotation matrix is always invertible. And as it is orthogonal ans its inverse is its transpose.}$$
 
+$$ \left\lbrace
+\begin{aligned}
+& P_{c} = RP_{r} + T  \quad \text{where $P_{r} = (X_{r}, Y_{r}, Z_{r})^{T}$,  $T$ and $R$ are the translation vector and rotation matrices}\\
+& RP_{r} = P_{c} - T \\
+& P_{r} = R^{T}(P_{c} - T) \quad \text{The rotation matrix is always invertible. And as it is orthogonal ans its inverse is its transpose.} \\
+\end{aligned}
+\right. $$
+
+The following python function implements the pinhole model to generate 3D point in the camera referential using depth map and the intrinsic matrix.
 
 ```python 
-def generate_point_cloud(depth_map, rgb_image=None,  extrinsic_matrix=None, intrinsic_matrix=None, cam_path=None, fx=None, fy=None, cx=None, cy=None):
+def generate_point_cloud(depth_map, intrinsic_matrix, depth_info, rgb_image=None):
     # Image dimensions
     H, W = depth_map.shape
-    if cam_path is not None:
-      with open(cam_path, 'r') as f:
-        lines = list(f.read().splitlines())
-        intrinsic_matrix =np.array([l.split() for l in lines[7:10]], dtype=float)
-        depth_info = np.array(lines[11].split(), dtype=float)
     # Intrinsic parameters
-    depth_min = 1e-4
-    depth_max = 10.
-    fx, fy = fx, fy
-    cx, cy = cx, cy
-
-    if intrinsic_matrix is not None:
-      fx, fy = intrinsic_matrix[0, 0], intrinsic_matrix[1, 1]
-      cx, cy = intrinsic_matrix[0, 2], intrinsic_matrix[1, 2]
-      depth_max = depth_info[3]
-      depth_min = depth_info[0]
-    
-
-    if fx is None:
-      fx, fy = 5.826e+02, 5.826e+02
-    if cx is None:
-      cx, cy = 3.130e+02, 2.384e+02
+    fx, fy = intrinsic_matrix[0, 0], intrinsic_matrix[1, 1]
+    cx, cy = intrinsic_matrix[0, 2], intrinsic_matrix[1, 2]
+    depth_max = depth_info[3] # If depth info are provided
+    depth_min = depth_info[0]
     
     # Create a grid of pixel coordinates
     u, v = np.meshgrid(np.arange(W), np.arange(H))
@@ -96,41 +87,33 @@ def generate_point_cloud(depth_map, rgb_image=None,  extrinsic_matrix=None, intr
     y_cam = z_cam * y_norm
     # Stack into a 3D array (camera coordinates)
     points_cam = np.stack((x_cam, z_cam, -1*y_cam), axis=-1).reshape(-1, 3)
-    
-    mask = np.logical_and(depth_map>depth_min, depth_map<depth_max)
-    colors = None
     if rgb_image is not None:
       colors = rgb_image[v, u] / 255.0
-    return points_cam.reshape((H, W, 3)), colors, mask
+    return points_cam, colors
 ```
-
-##### Blended MVS dataset
-
-BlendedMVS is a large scale dataset that contains scenes with multiple views. The following presents some scene examples from the data and different views of the constructed 3D point of these scenes.
-
-
-**Figure of examples**
-
-For the blended mvs we have alse the images masked, which mean images containing only the object of interest. as you can see in the example below. Sometimes we have images of walls or containing scenes taking from extreme angles eg top-down view. This kind of images will make the task a little bit harder. We eliminate this type of image by thresholding on the number of black pixel presents in the image. 
 
 ##### NUY Depth V2 dataset
 
 NUY Depth V2 is a large dataset that contains indoor scenes. The following presents some scene examples from the data and different views of the constructed 3D point of these scenes.
 
 
-** Figure of examples **
+{% include figure.liquid loading="eager" path="assets/img/NUY_depth_data.png" class="img-fluid rounded z-depth-1" zoomable=true %}
 
 ## Approach and Architecure
 
 The objective is to map the image $ I \in\mathbb{R}^{M\times N \times 3}$ to its 3D point cloud $X \in\mathbb{R}^{M\times N \times 3}$ . we can think about a naive or simple autoencoder decoder architecture such as UNET. Where the econder learn the image representation and the decoder map the representation to 3D point cloud. UNET architecture has been tested but it did not give satisfying results.
-Our focus will be focus on the camera referential and if we consider the Pinhole camera model, we have the cordinaates X, Y and Z are based on depth map. We have the Z is the depth and X, Y are the the depth map multiplied by coefficient depends on the camera parameters, i.e, the focal length and pricipal camera point and the pixel coordinates. 
+
+Our focus will be focus on the camera referential. If we consider the Pinhole camera model, we have the cordinaates $X$, $Y$ and $Z$ depend on the depth map as shown in equation (1).
+
 The idea is instead to learn a mapping function of the image to the 3D point cloud, we will think of a design that estimates the depth map and the camera parameters.
 
-We will follow an approach proposed by Yin et al [6] that has two stages. The first is a network to estimate the depth map that will be used to reconstruct a 3D point cloud using standard camera parameters. Not using the correct parameters, precisely, the focal length will result in a distorded point cloud even the global shape is preserved. 
-The other stage then is composed from two networks each take as input a distorded point cloud and estimate either a focal scale or depth shift to restore the distorded 3D point. The input distorded point cloud are created as follows:
-- for the first network, we shift the depth map by a value drawn from a uniform distribution. The shift will result in a distorded shape as it will affect non uniformly, the X, Y, and Z. So, the goal of the first network is to estimate the depth shift value.
-- For the second network, the distortion is created by scaling the focal length by a coefficient drawn from a uniform distribution. This scaling will affect only X and Y and will results in points far from each other or closer to each other.
+We will follow an approach proposed by Yin et al [6] that has two stages:
 
+1. The first stage is a training a neural network to learn estimating the depth map that will be used to reconstruct a 3D point cloud using standard camera parameters. Not using the correct parameters, precisely, the focal length will result in a distorded point cloud even the global shape is preserved. 
+
+2. The second stage then is composed from two networks each take as input a distorded point cloud and estimate either a focal scale or depth shift to restore the distorded 3D point. 
+
+#### **First Stage: Depth Estimation** : 
 For depth map estimation eigen et al [1] introduced a CNN model levereging on multi scale network.This approach involves training a coarse scale network to predict the depth map at global level which is subsequently refined by a secondary network to refine the local regions. Using a multi-scale architecture proven to be effective, Xian et al [7] proposed a multi scale network that use a feature fusion module to fuse features from the encoder and decoder at different scales to obtain finer prediction. Additionnaly to using a multiscale architecture, in Big to Small model [2], the author proposed, under the assumption of locar planar, a local planar guidance module to guide features to the final depth. Unlike other methods which use only skip connection from encoder stage and upsampling to recover the final depth.
 
 We will use BTS model for this task. BTS has an encoder-decoder architecture. The encoder outputs a dense feature map of $H/8$ resolution. The decoding phase consists of $4$ stages. Each stage $k$, (with $k \in {8, 4, 2, 1}$) takes a dense feature map of $H/k$ resolution and apply two operations:
@@ -139,30 +122,41 @@ We will use BTS model for this task. BTS has an encoder-decoder architecture. Th
 The output of these two operations are element-wise multiplied and passed through a convolution operation to have the input feature map of resolution $2H/k$ for the next stage. 
 
 To have the estimated depth map $d$, all the coersed depth map produced by the local planar guidance are used together as follows:
-$$d = f\{W_1 \tilde{c}^{1 \times 1} + W_2 \tilde{c}^{2\times 2} + W_3 \tilde{c}^{4\times 4} + W_4\tilde{c}^{8\times 8}\)$$ 
 
-- **the LPG module:**  Given a feature map having a spatial resolution $H/k$, it estimates $4D$ plane coefficient for each spatial cell to reconstruct a coarse depth that fit a locally defined $k\times k$ patch on the full resolution. The LPG uses ray-plane intersection to convert each estimated 4D plane coefficient to $k\times k$ local depth cues on the full resolution:
-$$c = \frac{n_{4}}{n_{1}u_{i} + n_{2}v_{i} + n_{3}} \qquad  \text{ where } \quad n = (n_{1}, n_{2}, n_{3}, n_{4}) \text{ where are the estimated 4D parameters}$$
-$$\qquad \text{and } (u_{i}, v_{i}) \text{  are $k\times k$ patch wise normalized coordinate of pixel $i$ }$$
+$$d = f(W_1 \tilde{c}^{1 \times 1} + W_2 \tilde{c}^{2\times 2} + W_3 \tilde{c}^{4\times 4} + W_4\tilde{c}^{8\times 8})$$ 
+
+**the LPG module:**  Given a feature map having a spatial resolution $H/k$, it estimates $4D$ plane coefficient for each spatial cell to reconstruct a coarse depth that fit a locally defined $k\times k$ patch on the full resolution. The LPG uses ray-plane intersection to convert each estimated 4D plane coefficient to $k\times k$ local depth cues on the full resolution:
+
+$$c = \frac{n_{4}}{n_{1}u_{i} + n_{2}v_{i} + n_{3}}$$
+
+where $n = (n_{1}, n_{2}, n_{3}, n_{4})$ are the estimated 4D parameters and $(u_{i}, v_{i})$ \are $k\times k$ patch wise normalized coordinate of pixel $i$
+
 The $n$ parameters are the plane parameters where $(n_{1}, n_{2}, n_{3})$ is the normal vector and $n_{4}$ is the distance from the origine to the plane. To estimate these parameters, they use the fact that a normal vector can be computed using two angles, polars and azimuthal, using the the following formulas: (more details in the Appendix)
 
-$$n_{1} = sin(\theta)cos(\phi)$$
-
-$$n_{2} = sin(\theta)sin(\phi)$$
-
-$$n_{3} = cos(\theta)$$
-
-$$n_{4} = d$$ 
+$$ \left\lbrace
+\begin{aligned}
+& n_{1} = sin(\theta)cos(\phi)\\
+& n_{2} = sin(\theta)sin(\phi)\\
+& n _{3} = cos(\theta)\\
+& n_{4} = d
+\end{aligned}
+\right. $$
 
 To estimates these three parameters at the scale $H/k$, the LPG takes as input the feature of the previous fusion module, i.e feature at scale $H/2k$, and pass them through a series of $1\times1$ convolution to reduce the number of channels by a factor of $2$ until it reaches $3$. So the final convolution layer of the LPG estimates $\theta$, $\phi$ and $d$. More details about the computation are in the implementation of this module.
 Thus using the LPG, we have an estimation of depth map at different scales. The lower scales learns the global shapes and the higher scales learns local details. 
 The final depth is estimated through a convolution that takes all the depth map at each scale
 
+#### **focal length and depth shift estimation**
+
+The input distorded point cloud are created as follows:
+1. for the first network, we shift the depth map by a value drawn from a uniform distribution. The shift will result in a distorded shape as it will affect non uniformly, the X, Y, and Z. So, the goal of the first network is to estimate the depth shift value.
+2. For the second network, the distortion is created by scaling the focal length by a coefficient drawn from a uniform distribution. This scaling will affect only X and Y and will results in points far from each other or closer to each other.
+
 to estimate the depth shift and focal length shift. As in [6] we have neural network based on PointNet to predict the depth shift or focal length shift given a input of distorted point cloud: 
 
 $$L_{depth\ shift} = min_{\theta} |N_d(F(u_0, v_0, f^{*}, d^{*} + ∆^{*}_d), \theta) − ∆^{*}_d|$$
 
-where $$\delta^{*}_d$$ is drawn from a uniform distribution $$\text{Uniform}(-0.25, 0.8)$$ during training
+where $$\Delta^{*}_d$$ is drawn from a uniform distribution $$\text{Uniform}(-0.25, 0.8)$$ during training
 
 $$L_{focal\ scale} = min_{\theta} |N_d(F(u_0, v_0, \alpha^{*}f^{*}, d^{*}), \theta) − \alpha^{*}|$$
 
@@ -172,22 +166,19 @@ where $$\alpha^{*}$$ is drawn from a uniform distribution $$\text{Uniform}(0.6, 
 The network used for focal scale estimation and depth shift estimation is a PoinNet [9] applied for regression task. The network takes as input a 3D point cloud (B, N, 3) and apply an **input transformation block** followed by a 1D conv layer to extract features. A **feature transformation block** is applied on the extracted and followed by a series of 1D conv operation to result in a vector of global feature using a max aggregation. The max pooling is used to have invariance w.t.r point cloud order.
 The  **input transformation block** and  **feature transformation block**  contains a series of conv and linear operations and use relu as activation function and max pooling to aggregates information. The transormation block is used to transform the point cloud to a canonical form to have invariance w.r.t to transformation.
 
-contains feature transformation block, three feature fusion module and adaptive ouput module. The decoder starts by applying the feature transformation block on the last feature maps of ResNet (1/32 scale) and upsampling the feature maps by a factor of 2 to have 1/16 scale. Then it applies three feature fusion modules that each one takes two feature maps of the same scale as input. the First feature maps is an output of ResNet and the second is the output of the previous feature fusion module. 
-The idea of feature fusion module is similar to UNET skip connection. Instead of concatenation the encoder block feature maps and decoder block ouput for a given scale, summation is used to fuse feature maps. 
 
 ### Data Preparation
 
-The NUY depth dataset and blendedMVS dataset are handled respectively by `NUYDepth` and `BlendedMVSDataset` classes that store samples of images, depth map for training depth map network and point cloud with depth shift or focal scale for PointNet networks. The classes contain both a method 
+The NUY depth dataset is handled respectively by `NUYDepth` class that stores samples of images, depth map for training depth map network and point cloud with depth shift or focal scale for PointNet networks. The class contains the method
 ```python 
 def _generate_point_cloud():
 ``` 
 which generate a point cloud using Pinhol camera model. 
-The classes take a data containing either the images and depth maps for `NUYDepth` or a dataframe containing the paths, and the train test split and other arguments specifyong if we train for depth map estimation of depth shift of focal scale. 
 
-In both dataset the image and depth map are resized to (256, 256) for computational reasons in the case we are training for depth map estimation. For depth shift or focal scale estimation, we keep the full resolution of the depth map to construct the 3D point cloud, but we use only a sample of 4096 points for for computational reasons. 
 
-The images are normalized using mean and std. For the NUY depth dataset we are using data augmentation, flipping and brightness adjusting as we are using only a subset of 1300 image from the data The original data has 490GB. 
-For blendedMVS we are eliminating some objects that corresponds to views of walls or views from bottom to ease the task a little bit.
+The image and depth map are resized to (256, 256) for computational reasons in the case we are training for depth map estimation. For depth shift or focal scale estimation, we keep the full resolution of the depth map to construct the 3D point cloud, but we use only a sample of 4096 points for for computational reasons. 
+
+The images are normalized using mean and std. We use data augmentation, flipping and brightness adjusting as we are using only a subset of 1300 image from the data The original data has 490GB. 
 
 ### Loss and Metrics
 
@@ -200,7 +191,8 @@ for evaluation we consider the following metrics used in the literature:
 
 - **Accuracy under a threshold** $\delta$ % of $$p  :  \delta = max(\frac{\hat{d}_p}{d_p}, \frac{d_p}{\hat{d}_p}) < threshold$$
 
-- **Abs. Rel.:** Mean Absolute Value of the Relative Error. $$\frac{1}{T} \sum_{p \in T} \left| \frac{d_p - \hat{d}_p}{d_p} \right|$$
+- **Abs. Rel.:** Mean Absolute Value of the Relative Error. 
+$$\frac{1}{T} \sum_{p \in T} \left| \frac{d_p - \hat{d}_p}{d_p} \right|$$
 
 #### Implementation
 
@@ -213,9 +205,6 @@ import torch.nn.functional as torch_nn_func
 import math
 
 from collections import namedtuple
-import ssl
-
-ssl._create_default_https_context = ssl._create_stdlib_context
 
 # This sets the batch norm layers in pytorch as if {'is_training': False, 'scale': True} in tensorflow
 def bn_init_as_tf(m):
@@ -619,15 +608,13 @@ The table below resume the evaluation metrics on both dataset and we have the ad
 |----------------|----------------|----------------|----------------|
 | NUY Depth  (Adaptive)| 0.530  | 4.633 | 1.353 |
 | NUY Depth  (Adaptive with local planar)|0.013 |1.454| 17.2 |
-| Blended MVS (Adaptive)| 0.812  | 5.275  |  22.457 |
-| Blended MVS (Adaptive with local planar)| 0.557  | 0.503  |  0.860 |
 
 ### Qualitative Results
 
 The pipeline for inference starts by predicting the depth map, on which we apply a sigmoid function to have positive values. The depth map prediction model outputs depth maps with negative values. we Have test using sigmoid, ReLU or Softplus activation function to output the final depth map during training but it led to bad results. Then, we estimate the focal length and the depth shift. To do so, we create a 3D point cloud from a standard focal length and camera optical center. Then we predict refine the focal length by estimating a focal scale from the constructed 3D point. We use the new focal length to construct new 3D point cloud and to refine then the depth by estimating a depth shift. Again use the refined depth to refine another time the focal length. Then we have the final depth and the focal length that we use to generate the final 3D point cloud. 
 
 
-**figure of examples**
+{% include figure.liquid loading="eager" path="assets/img/NUY_depth_data_prediction.png" class="img-fluid rounded z-depth-1" zoomable=true %}
 
 Qualitativly, we can see that the approach can capture the global shapes, but the point cloud are very distorded. For example if we compare the left views and top views between group truth and the prediction, we can see easily the huge difference which could be due to the depth prediction.
 
