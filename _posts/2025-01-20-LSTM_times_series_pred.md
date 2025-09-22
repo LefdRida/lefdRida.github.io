@@ -5,7 +5,6 @@ description:
 tags: Technical-post, ML
 giscus_comments: true
 date: 2025-01-20 11:12:00-0400
-
 featured: true
 mermaid:
   enabled: true
