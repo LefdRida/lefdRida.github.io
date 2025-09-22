@@ -37,15 +37,15 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/cv/";
           },
-        },{id: "post-depth-estimation",
+        },{id: "post-",
         
-          title: "Depth Estimation",
+          title: "",
         
         description: "",
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/posts/2025/depth_estimation/";
+            window.location.href = "/posts/2025/2025-03-20-depth_estimation/";
           
         },
       },{id: "post-hello-world",
@@ -57,6 +57,17 @@ ninja.data = [{
         handler: () => {
           
             window.location.href = "/posts/2025/hello_world/";
+          
+        },
+      },{id: "post-rag-system-overview",
+        
+          title: "RAG System Overview",
+        
+        description: "",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/posts/2025/RAG_Blog/";
           
         },
       },{id: "post-energy-forecasting-with-lstm",
