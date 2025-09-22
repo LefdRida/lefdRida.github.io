@@ -25,17 +25,17 @@ authors:
       name: Independent
 toc:
   - name: Monocular 3D Mapping
-    - name: NUY Depth V2 dataset
+  - name: NUY Depth V2 dataset
   - name: Approach and Architecure
-    - name: First Stage: Depth Estimation
-    - name: focal length and depth shift estimation
-    - name: Loss and Metrics
+  - name: First Stage: Depth Estimation
+  - name: focal length and depth shift estimation
+  - name: Loss and Metrics
   - name: Data Preparation
   - name: Implementation
-    - name: Depth shift and focal scale network
+  - name: Depth shift and focal scale network
   - name: Results
-    - name: Quantitative Results
-    - name: Qualitative Results
+  - name: Quantitative Results
+  - name: Qualitative Results
 
 _styles: >
   .fake-img {
