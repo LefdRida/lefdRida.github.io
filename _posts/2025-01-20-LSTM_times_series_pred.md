@@ -1,11 +1,49 @@
 ---
-layout: post
+layout: distill
 title: Energy Forecasting with LSTM
 date: 2025-01-20 11:12:00-0400
 description: 
 tags: 
 categories: Technical-post
 related_posts: false
+giscus_comments: true
+featured: true
+mermaid:
+  enabled: true
+  zoomable: true
+code_diff: true
+map: true
+chart:
+  chartjs: true
+  echarts: true
+  vega_lite: true
+tikzjax: true
+typograms: true
+
+authors:
+  - name: Rida Lefdali
+    url: "www.linkedin.com/in/rlefdali/"
+    affiliations:
+      name: Independent
+toc:
+  - name: Long Short Term Memory : LSTM
+
+
+_styles: >
+  .fake-img {
+    background: #bbb;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 12px;
+  }
+  .fake-img p {
+    font-family: monospace;
+    color: white;
+    text-align: left;
+    margin: 12px 0;
+    text-align: center;
+    font-size: 16px;
+  }
 ---
 
 
@@ -18,7 +56,7 @@ A first problem of RNN is its inability to perform well on tasks that require th
 
 To address this limitations, more complex network was designed. And LSTM is the most commonly used as an extension to RNN.
 
-### Long Short Term Memory : LSTM
+## Long Short Term Memory : LSTM
 
 Long Short term memory solves the limitation of neglicting information distant from the current time step, encountered in RNN. It achieves this by adding a context layer to the architecture that output a context vector $$c_t$$. And, adding, also, gates that allow either to remove information that are no longer needed or to add information to be needed for later decision making. 
 

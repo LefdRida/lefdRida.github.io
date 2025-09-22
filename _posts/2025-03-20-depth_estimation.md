@@ -1,12 +1,11 @@
 ---
 layout: distill
 title: Depth Estimation
-date: 2025-03-20 11:12:00-0400
-description: 
-tags: 
-categories: Technical-post
+description:
+tags: Technical-post, ML
 related_posts: false
 giscus_comments: true
+date: 2025-03-20 11:12:00-0400
 featured: true
 mermaid:
   enabled: true
@@ -21,27 +20,10 @@ tikzjax: true
 typograms: true
 
 authors:
-  - name: Albert Einstein
-    url: "https://en.wikipedia.org/wiki/Albert_Einstein"
+  - name: Rida Lefdali
+    url: "www.linkedin.com/in/rlefdali/"
     affiliations:
-      name: IAS, Princeton
-  - name: Boris Podolsky
-    url: "https://en.wikipedia.org/wiki/Boris_Podolsky"
-    affiliations:
-      name: IAS, Princeton
-  - name: Nathan Rosen
-    url: "https://en.wikipedia.org/wiki/Nathan_Rosen"
-    affiliations:
-      name: IAS, Princeton
-
-bibliography: 2018-12-22-distill.bib
-
-# Optionally, you can add a table of contents to your post.
-# NOTES:
-#   - make sure that TOC names match the actual section names
-#     for hyperlinks within the post to work correctly.
-#   - we may want to automate TOC generation in the future using
-#     jekyll-toc plugin (https://github.com/toshimaru/jekyll-toc).
+      name: Independent
 toc:
   - name: Monocular 3D Mapping
     - name: NUY Depth V2 dataset
@@ -56,9 +38,6 @@ toc:
     - name: Quantitative Results
     - name: Qualitative Results
 
-
-# Below is an example of injecting additional post-specific styles.
-# If you use this post as a template, delete this _styles block.
 _styles: >
   .fake-img {
     background: #bbb;
