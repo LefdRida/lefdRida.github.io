@@ -4,7 +4,7 @@ title: Energy Forecasting with LSTM
 description: 
 tags: Technical-post, ML
 giscus_comments: true
-date: 2025-01-20 11:12:00-0400
+date: 2025-01-18 11:12:00-0400
 featured: true
 mermaid:
   enabled: true
@@ -43,7 +43,6 @@ _styles: >
     font-size: 16px;
   }
 ---
-
 
 In this post we will cover LSTM through time series forecasting. The aim is to explain LSTM and its advantage regarding RNNs. We will cover an application of Energy consumption and cover also some statistical algorithm for comparison. 
 
