@@ -1,12 +1,11 @@
 ---
 layout: distill
 title: Energy Forecasting with LSTM
-date: 2025-01-20 11:12:00-0400
 description: 
-tags: 
-categories: Technical-post
-related_posts: false
+tags: Technical-post, ML
 giscus_comments: true
+date: 2025-01-20 11:12:00-0400
+
 featured: true
 mermaid:
   enabled: true
