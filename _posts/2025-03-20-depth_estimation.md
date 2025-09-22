@@ -1,15 +1,82 @@
 ---
-layout: post
+layout: distill
 title: Depth Estimation
 date: 2025-03-20 11:12:00-0400
 description: 
 tags: 
 categories: Technical-post
 related_posts: false
+giscus_comments: true
+featured: true
+mermaid:
+  enabled: true
+  zoomable: true
+code_diff: true
+map: true
+chart:
+  chartjs: true
+  echarts: true
+  vega_lite: true
+tikzjax: true
+typograms: true
+
+authors:
+  - name: Albert Einstein
+    url: "https://en.wikipedia.org/wiki/Albert_Einstein"
+    affiliations:
+      name: IAS, Princeton
+  - name: Boris Podolsky
+    url: "https://en.wikipedia.org/wiki/Boris_Podolsky"
+    affiliations:
+      name: IAS, Princeton
+  - name: Nathan Rosen
+    url: "https://en.wikipedia.org/wiki/Nathan_Rosen"
+    affiliations:
+      name: IAS, Princeton
+
+bibliography: 2018-12-22-distill.bib
+
+# Optionally, you can add a table of contents to your post.
+# NOTES:
+#   - make sure that TOC names match the actual section names
+#     for hyperlinks within the post to work correctly.
+#   - we may want to automate TOC generation in the future using
+#     jekyll-toc plugin (https://github.com/toshimaru/jekyll-toc).
+toc:
+  - name: Monocular 3D Mapping
+    - name: NUY Depth V2 dataset
+  - name: Approach and Architecure
+    - name: First Stage: Depth Estimation
+    - name: focal length and depth shift estimation
+    - name: Loss and Metrics
+  - name: Data Preparation
+  - name: Implementation
+    - name: Depth shift and focal scale network
+  - name: Results
+    - name: Quantitative Results
+    - name: Qualitative Results
+
+
+# Below is an example of injecting additional post-specific styles.
+# If you use this post as a template, delete this _styles block.
+_styles: >
+  .fake-img {
+    background: #bbb;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 12px;
+  }
+  .fake-img p {
+    font-family: monospace;
+    color: white;
+    text-align: left;
+    margin: 12px 0;
+    text-align: center;
+    font-size: 16px;
+  }
 ---
 
-
-### Monocular 3D Mapping
+## Monocular 3D Mapping
 
 Depth estimation is a task consisting of estimating the distance of each pixel realtive to the camera to result in a depth map. Using the depth map with some camera parameters, explained later, we can map an image $ I \in\mathbb{R}^{M\times N \times 3}$ to its 3D point cloud $X \in\mathbb{R}^{M \times N \times 3}$. This means, we can map each pixel in the 2D image to its corresponding point in the 3D space. 
 
@@ -113,7 +180,7 @@ We will follow an approach proposed by Yin et al [6] that has two stages:
 
 2. The second stage then is composed from two networks each take as input a distorded point cloud and estimate either a focal scale or depth shift to restore the distorded 3D point. 
 
-#### **First Stage: Depth Estimation** : 
+#### First Stage: Depth Estimation : 
 For depth map estimation eigen et al [1] introduced a CNN model levereging on multi scale network.This approach involves training a coarse scale network to predict the depth map at global level which is subsequently refined by a secondary network to refine the local regions. Using a multi-scale architecture proven to be effective, Xian et al [7] proposed a multi scale network that use a feature fusion module to fuse features from the encoder and decoder at different scales to obtain finer prediction. Additionnaly to using a multiscale architecture, in Big to Small model [2], the author proposed, under the assumption of locar planar, a local planar guidance module to guide features to the final depth. Unlike other methods which use only skip connection from encoder stage and upsampling to recover the final depth.
 
 We will use BTS model for this task. BTS has an encoder-decoder architecture. The encoder outputs a dense feature map of $H/8$ resolution. The decoding phase consists of $4$ stages. Each stage $k$, (with $k \in {8, 4, 2, 1}$) takes a dense feature map of $H/k$ resolution and apply two operations:
@@ -146,7 +213,7 @@ To estimates these three parameters at the scale $H/k$, the LPG takes as input t
 Thus using the LPG, we have an estimation of depth map at different scales. The lower scales learns the global shapes and the higher scales learns local details. 
 The final depth is estimated through a convolution that takes all the depth map at each scale
 
-#### **focal length and depth shift estimation**
+#### focal length and depth shift estimation
 
 The input distorded point cloud are created as follows:
 1. for the first network, we shift the depth map by a value drawn from a uniform distribution. The shift will result in a distorded shape as it will affect non uniformly, the X, Y, and Z. So, the goal of the first network is to estimate the depth shift value.
@@ -166,21 +233,7 @@ where $$\alpha^{*}$$ is drawn from a uniform distribution $$\text{Uniform}(0.6, 
 The network used for focal scale estimation and depth shift estimation is a PoinNet [9] applied for regression task. The network takes as input a 3D point cloud (B, N, 3) and apply an **input transformation block** followed by a 1D conv layer to extract features. A **feature transformation block** is applied on the extracted and followed by a series of 1D conv operation to result in a vector of global feature using a max aggregation. The max pooling is used to have invariance w.t.r point cloud order.
 The  **input transformation block** and  **feature transformation block**  contains a series of conv and linear operations and use relu as activation function and max pooling to aggregates information. The transormation block is used to transform the point cloud to a canonical form to have invariance w.r.t to transformation.
 
-
-### Data Preparation
-
-The NUY depth dataset is handled respectively by `NUYDepth` class that stores samples of images, depth map for training depth map network and point cloud with depth shift or focal scale for PointNet networks. The class contains the method
-```python 
-def _generate_point_cloud():
-``` 
-which generate a point cloud using Pinhol camera model. 
-
-
-The image and depth map are resized to (256, 256) for computational reasons in the case we are training for depth map estimation. For depth shift or focal scale estimation, we keep the full resolution of the depth map to construct the 3D point cloud, but we use only a sample of 4096 points for for computational reasons. 
-
-The images are normalized using mean and std. We use data augmentation, flipping and brightness adjusting as we are using only a subset of 1300 image from the data The original data has 490GB. 
-
-### Loss and Metrics
+#### Loss and Metrics
 
 The depth estimation, focal length scale estimation or depth shift estimation are regression task. For the loss will be based of L1 or MSE loss 
 In depth estimation many losses function have been proposed in the literature such as Huber Loss, silog loss, ordinal regression loss. In our case, we will use scale invariance log which computes the error between the ground truth and the prediction without taking into account the scale discrepency.So, it consider only the relative error between the values.
@@ -194,7 +247,22 @@ for evaluation we consider the following metrics used in the literature:
 - **Abs. Rel.:** Mean Absolute Value of the Relative Error. 
 $$\frac{1}{T} \sum_{p \in T} \left| \frac{d_p - \hat{d}_p}{d_p} \right|$$
 
-#### Implementation
+
+## Data Preparation
+
+The NUY depth dataset is handled respectively by `NUYDepth` class that stores samples of images, depth map for training depth map network and point cloud with depth shift or focal scale for PointNet networks. The class contains the method
+```python 
+def _generate_point_cloud():
+``` 
+which generate a point cloud using Pinhol camera model. 
+
+
+The image and depth map are resized to (256, 256) for computational reasons in the case we are training for depth map estimation. For depth shift or focal scale estimation, we keep the full resolution of the depth map to construct the 3D point cloud, but we use only a sample of 4096 points for for computational reasons. 
+
+The images are normalized using mean and std. We use data augmentation, flipping and brightness adjusting as we are using only a subset of 1300 image from the data The original data has 490GB. 
+
+
+## Implementation
 
 Here the implementation of the models, datasets and training loops. The results discussion are right after the following cells.
 
@@ -597,7 +665,9 @@ class Gamma_Metric(nn.Module):
         return gamma
 ```
 
-### Quantitative Results
+## Quantitative Results
+
+#### Quantitative Results
 
 
 We plot the evolution of the training and test loss for both models on both dataset. Both models converge on both dataset except for the model adapt on blended MVS were the test loss is fluctuating along a single value which does not show any decreasing trend and that could be a sign of the inability of the model on that dataset. This could be due to the fact that the model is to small to generalize on that data. 
@@ -609,7 +679,7 @@ The table below resume the evaluation metrics on both dataset and we have the ad
 | NUY Depth  (Adaptive)| 0.530  | 4.633 | 1.353 |
 | NUY Depth  (Adaptive with local planar)|0.013 |1.454| 17.2 |
 
-### Qualitative Results
+#### Qualitative Results
 
 The pipeline for inference starts by predicting the depth map, on which we apply a sigmoid function to have positive values. The depth map prediction model outputs depth maps with negative values. we Have test using sigmoid, ReLU or Softplus activation function to output the final depth map during training but it led to bad results. Then, we estimate the focal length and the depth shift. To do so, we create a 3D point cloud from a standard focal length and camera optical center. Then we predict refine the focal length by estimating a focal scale from the constructed 3D point. We use the new focal length to construct new 3D point cloud and to refine then the depth by estimating a depth shift. Again use the refined depth to refine another time the focal length. Then we have the final depth and the focal length that we use to generate the final 3D point cloud. 
 
