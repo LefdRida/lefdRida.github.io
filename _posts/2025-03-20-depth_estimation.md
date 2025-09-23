@@ -137,7 +137,7 @@ def generate_point_cloud(depth_map, intrinsic_matrix, depth_info, rgb_image=None
     return points_cam, colors
 ```
 
-##### NUY Depth V2 dataset
+## NUY Depth V2 dataset
 
 NUY Depth V2 is a large dataset that contains indoor scenes. The following presents some scene examples from the data and different views of the constructed 3D point of these scenes.
 
@@ -158,7 +158,7 @@ We will follow an approach proposed by Yin et al [6] that has two stages:
 
 2. The second stage then is composed from two networks each take as input a distorded point cloud and estimate either a focal scale or depth shift to restore the distorded 3D point. 
 
-#### First Stage: Depth Estimation : 
+## First Stage: Depth Estimation : 
 For depth map estimation eigen et al [1] introduced a CNN model levereging on multi scale network.This approach involves training a coarse scale network to predict the depth map at global level which is subsequently refined by a secondary network to refine the local regions. Using a multi-scale architecture proven to be effective, Xian et al [7] proposed a multi scale network that use a feature fusion module to fuse features from the encoder and decoder at different scales to obtain finer prediction. Additionnaly to using a multiscale architecture, in Big to Small model [2], the author proposed, under the assumption of locar planar, a local planar guidance module to guide features to the final depth. Unlike other methods which use only skip connection from encoder stage and upsampling to recover the final depth.
 
 We will use BTS model for this task. BTS has an encoder-decoder architecture. The encoder outputs a dense feature map of $H/8$ resolution. The decoding phase consists of $4$ stages. Each stage $k$, (with $k \in {8, 4, 2, 1}$) takes a dense feature map of $H/k$ resolution and apply two operations:
@@ -191,7 +191,7 @@ To estimates these three parameters at the scale $H/k$, the LPG takes as input t
 Thus using the LPG, we have an estimation of depth map at different scales. The lower scales learns the global shapes and the higher scales learns local details. 
 The final depth is estimated through a convolution that takes all the depth map at each scale
 
-#### focal length and depth shift estimation
+## focal length and depth shift estimation
 
 The input distorded point cloud are created as follows:
 1. for the first network, we shift the depth map by a value drawn from a uniform distribution. The shift will result in a distorded shape as it will affect non uniformly, the X, Y, and Z. So, the goal of the first network is to estimate the depth shift value.
@@ -211,7 +211,7 @@ where $$\alpha^{*}$$ is drawn from a uniform distribution $$\text{Uniform}(0.6, 
 The network used for focal scale estimation and depth shift estimation is a PoinNet [9] applied for regression task. The network takes as input a 3D point cloud (B, N, 3) and apply an **input transformation block** followed by a 1D conv layer to extract features. A **feature transformation block** is applied on the extracted and followed by a series of 1D conv operation to result in a vector of global feature using a max aggregation. The max pooling is used to have invariance w.t.r point cloud order.
 The  **input transformation block** and  **feature transformation block**  contains a series of conv and linear operations and use relu as activation function and max pooling to aggregates information. The transormation block is used to transform the point cloud to a canonical form to have invariance w.r.t to transformation.
 
-#### Loss and Metrics
+## Loss and Metrics
 
 The depth estimation, focal length scale estimation or depth shift estimation are regression task. For the loss will be based of L1 or MSE loss 
 In depth estimation many losses function have been proposed in the literature such as Huber Loss, silog loss, ordinal regression loss. In our case, we will use scale invariance log which computes the error between the ground truth and the prediction without taking into account the scale discrepency.So, it consider only the relative error between the values.
@@ -527,7 +527,7 @@ class BtsModel(nn.Module):
         return self.decoder(skip_feat, focal)
 ```
 
-#### Depth shift and focal scale network
+## Depth shift and focal scale network
 
 ```python
     
@@ -645,8 +645,6 @@ class Gamma_Metric(nn.Module):
 
 ## Quantitative Results
 
-#### Quantitative Results
-
 
 We plot the evolution of the training and test loss for both models on both dataset. Both models converge on both dataset except for the model adapt on blended MVS were the test loss is fluctuating along a single value which does not show any decreasing trend and that could be a sign of the inability of the model on that dataset. This could be due to the fact that the model is to small to generalize on that data. 
 
@@ -657,7 +655,7 @@ The table below resume the evaluation metrics on both dataset and we have the ad
 | NUY Depth  (Adaptive)| 0.530  | 4.633 | 1.353 |
 | NUY Depth  (Adaptive with local planar)|0.013 |1.454| 17.2 |
 
-#### Qualitative Results
+## Qualitative Results
 
 The pipeline for inference starts by predicting the depth map, on which we apply a sigmoid function to have positive values. The depth map prediction model outputs depth maps with negative values. we Have test using sigmoid, ReLU or Softplus activation function to output the final depth map during training but it led to bad results. Then, we estimate the focal length and the depth shift. To do so, we create a 3D point cloud from a standard focal length and camera optical center. Then we predict refine the focal length by estimating a focal scale from the constructed 3D point. We use the new focal length to construct new 3D point cloud and to refine then the depth by estimating a depth shift. Again use the refined depth to refine another time the focal length. Then we have the final depth and the focal length that we use to generate the final 3D point cloud. 
 

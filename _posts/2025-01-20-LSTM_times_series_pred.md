@@ -53,7 +53,7 @@ A first problem of RNN is its inability to perform well on tasks that require th
 
 To address this limitations, more complex network was designed. And LSTM is the most commonly used as an extension to RNN.
 
-## Long Short Term Memory : LSTM
+## Long Short Term Memory LSTM
 
 Long Short term memory solves the limitation of neglicting information distant from the current time step, encountered in RNN. It achieves this by adding a context layer to the architecture that output a context vector $$c_t$$. And, adding, also, gates that allow either to remove information that are no longer needed or to add information to be needed for later decision making. 
 
