@@ -48,17 +48,6 @@ ninja.data = [{
             window.location.href = "/posts/2025/2025-03-20-depth_estimation/";
           
         },
-      },{id: "post-",
-        
-          title: "",
-        
-        description: "",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/posts/2025/2025-01-20-LSTM_times_series_pred/";
-          
-        },
       },{id: "post-hello-world",
         
           title: "Hello World",
@@ -90,6 +79,17 @@ ninja.data = [{
         handler: () => {
           
             window.location.href = "/posts/2025/RAG_Blog/";
+          
+        },
+      },{id: "post-energy-forecasting-with-lstm",
+        
+          title: "Energy Forecasting with LSTM",
+        
+        description: "",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/posts/2025/LSTM_times_series_pred/";
           
         },
       },{
