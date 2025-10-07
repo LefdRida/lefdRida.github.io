@@ -27,7 +27,7 @@ toc:
   - name: Monocular 3D Mapping
   - name: NUY Depth V2 dataset
   - name: Approach and Architecure
-  - name: First Stage: Depth Estimation
+  - name: First Stage - Depth Estimation
   - name: focal length and depth shift estimation
   - name: Loss and Metrics
   - name: Data Preparation
@@ -157,7 +157,7 @@ We will follow an approach proposed by Yin et al [6] that has two stages:
 
 2. The second stage then is composed from two networks each take as input a distorded point cloud and estimate either a focal scale or depth shift to restore the distorded 3D point. 
 
-## First Stage: Depth Estimation : 
+## First Stage - Depth Estimation
 For depth map estimation eigen et al [1] introduced a CNN model levereging on multi scale network.This approach involves training a coarse scale network to predict the depth map at global level which is subsequently refined by a secondary network to refine the local regions. Using a multi-scale architecture proven to be effective, Xian et al [7] proposed a multi scale network that use a feature fusion module to fuse features from the encoder and decoder at different scales to obtain finer prediction. Additionnaly to using a multiscale architecture, in Big to Small model [2], the author proposed, under the assumption of locar planar, a local planar guidance module to guide features to the final depth. Unlike other methods which use only skip connection from encoder stage and upsampling to recover the final depth.
 
 We will use BTS model for this task. BTS has an encoder-decoder architecture. The encoder outputs a dense feature map of $H/8$ resolution. The decoding phase consists of $4$ stages. Each stage $k$, (with $k \in {8, 4, 2, 1}$) takes a dense feature map of $H/k$ resolution and apply two operations:
