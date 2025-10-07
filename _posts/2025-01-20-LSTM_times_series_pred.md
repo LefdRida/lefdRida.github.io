@@ -24,7 +24,8 @@ authors:
     affiliations:
       name: Independent
 toc:
-  - name: Long Short Term Memory : LSTM
+  - name: Introduction
+  - name: Long Short Term Memory LSTM
 
 
 _styles: >
@@ -43,6 +44,8 @@ _styles: >
     font-size: 16px;
   }
 ---
+
+## Introduction
 
 In this post we will cover LSTM through time series forecasting. The aim is to explain LSTM and its advantage regarding RNNs. We will cover an application of Energy consumption and cover also some statistical algorithm for comparison. 
 

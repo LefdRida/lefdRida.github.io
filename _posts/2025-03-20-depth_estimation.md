@@ -33,7 +33,6 @@ toc:
   - name: Data Preparation
   - name: Implementation
   - name: Depth shift and focal scale network
-  - name: Results
   - name: Quantitative Results
   - name: Qualitative Results
 
