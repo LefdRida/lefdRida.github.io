@@ -37,18 +37,7 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/cv/";
           },
-        },{id: "post-",
-        
-          title: "",
-        
-        description: "",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/posts/2025/2025-03-20-depth_estimation/";
-          
-        },
-      },{id: "post-hello-world",
+        },{id: "post-hello-world",
         
           title: "Hello World",
         
@@ -68,6 +57,17 @@ ninja.data = [{
         handler: () => {
           
             window.location.href = "/posts/2025/HAN_blog/";
+          
+        },
+      },{id: "post-depth-estimation",
+        
+          title: "Depth Estimation",
+        
+        description: "",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/posts/2025/depth_estimation/";
           
         },
       },{id: "post-rag-system-overview",
