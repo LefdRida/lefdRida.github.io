@@ -37,18 +37,7 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/cv/";
           },
-        },{id: "post-",
-        
-          title: "",
-        
-        description: "",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/posts/2025/2025-01-20-LLM_from_scratch/";
-          
-        },
-      },{id: "post-hello-world",
+        },{id: "post-hello-world",
         
           title: "Hello World",
         
@@ -90,6 +79,17 @@ ninja.data = [{
         handler: () => {
           
             window.location.href = "/posts/2025/RAG_Blog/";
+          
+        },
+      },{id: "post-llm-from-scratch",
+        
+          title: "LLM From Scratch",
+        
+        description: "",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/posts/2025/LLM_from_scratch/";
           
         },
       },{id: "post-energy-forecasting-with-lstm",
