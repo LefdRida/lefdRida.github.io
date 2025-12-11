@@ -27,8 +27,8 @@ authors:
       name: Independent
 toc:
   - name: Transformers
-    - name: Input Embedding and positional Encodding.
-    - name: Multi-Headed Attention
+  - name: Input Embedding and positional Encodding.
+  - name: Multi-Headed Attention
 
 _styles: >
   .fake-img {
@@ -124,9 +124,8 @@ $$MultiHead(Q, K, V) = Concat(head_1, ..., head_h)W^{O}$$
 $$head_i = Attention(QW_{i}^{Q}, KW_{i}^{K}, VW_{i}^{V})$$
 
 
-#### Add & Norm Layer
+#### Add & Norm Layer and Residual connection
 
-#### Residual connection
 
 #### Feed Forward Layer
 
