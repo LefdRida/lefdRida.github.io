@@ -84,9 +84,9 @@ Multi-head Attention block is based on Scaled Dot-Product Attention, which we wi
 
 **Scaled Dot-Product Attention**
 The scaled Dot-Product attention takes as input three matrices Queries $Q$, Keys $K$ and Values $V$ of size $(L, d_{model})$. Those three matrices can be obtained by projecting the input tensor $X$ using Linear layers or replicating the input tensor directly as follows:
-$$Q = XW^{Q} \seq \seq or Q = X$$
-$$K = XW^{K} \seq \seq or K = X$$
-$$V = XW^{V} \seq \seq or V = X$$
+$$Q = XW^{Q} \qquad or Q = X$$
+$$K = XW^{K} \qquad or K = X$$
+$$V = XW^{V} \qquad or V = X$$
 
 Then compute for each token a new representation enriched with information about its meaning and relationships with other tokens using the following formula:
 
@@ -96,7 +96,7 @@ $$Attention(Q, K, V) = softmax(\frac{QK^{T}}{\sqrt(d_k)})V$$
 
 The softmax term can be seen as matrix of scores representing how much each word is important to the others. Then multiplying by the V matrices will produce a weighted average of embeddings. 
 
-__Properties:__
+*Properties:*
   - Permutation invariant: Changing rows' order will not affect the computation. Here the reason why positional embedding is important.
   - The softmax term is a matrix of size $L \times L$. If we don't want to take into account interaction between some words, we change their associated values to 0.  
 
@@ -104,7 +104,9 @@ __Properties:__
 **Multi-head Attention**
 Instead of performing single attention with matrices that have $d_{model}$ dimension, it was found that linearly projecting the Q, K, and V matrices $h$ times with different linear projections to $d_k$, $d_k$, $d_v$ respectively. A scaled dot-product attention is performed on each of the $h$ projected versions of Q, K, and V, and yields to $d_v$ dimensional output values. These are concatenated and once again project to result in the final values. 
 The following formula and figure illustrate the process:
+
 $$MultiHead(Q, K, V) = Concat(head_1, ..., head_h)W^{O}$$
+
 $$head_i = Attention(QW_{i}^{Q}, KW_{i}^{K}, VW_{i}^{V})$$
 
 {% include figure.liquid loading="eager" path="assets/llms_from_scratch_img/multi_head_attention.png" class="img-fluid rounded z-depth-1" zoomable=true %}
