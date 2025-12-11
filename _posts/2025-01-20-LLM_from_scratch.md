@@ -61,7 +61,7 @@ Released by google in their paper "Attention is all you need" in 2017, transform
 
 Transformers solve these limitation by using a Multi-head attention mechanism to process input tokens in parallel, preserving relationships regardless of distance as illustrated in the figure below.
 
-{% include figure.liquid loading="eager" path="assets/llms_from_scratch_img/transormers_arch.webp" class="img-fluid rounded z-depth-1" zoomable=true %}
+{% include figure.liquid loading="eager" path="assets/llms_from_scratch_img/transormers_arch.png" class="img-fluid rounded z-depth-1" zoomable=true %}
 
 Let's dig into the architecture of a transformer. 
 
@@ -73,10 +73,41 @@ Let's dig into the architecture of a transformer.
 
 2. **The embedding Layer:** Once tokenized, the sequence is passed through an embedding layer (it is learnable). This maps discrete tokens' ids to dense vectors. If we assume the embedding dimension is $d_{model}$ (e.g $d_{model}=512$), this step outputs a tensor of shape $(L, d_{model})$. So, each token id $t_{i}$ is now represented by a dense vector of dimension $d_{model}=512$ 
 
+{% include figure.liquid loading="eager" path="assets/llms_from_scratch_img/embedding_layer.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+
 3. **Positional Encodings:** Here lies a critical challenge. Unlike RNNs, transformers process all tokens in parallel. This means the model has no inherent sense of order (it cannot distinguish between "the dog bit the man" and "The man bit the dog"). To solve this, we add Positional Embedding vector (not learnable) to each token's embedding vector. This adds information about the token's absolute or relative position in the sentence and help the model to understand the word function (whether it acts as noun, verb, subject etc). Without this, the Multi-Head Attention would view the sentence as a chaotic "bag of words" rather than a structured sequence. 
 
 
 #### Multi-Headed Attention
+As illustrated in the transformer architecture above, the input embedding and positional encoding block produce an input tensor $X$ of size $(L, d_{model})$ which contains a dense vectors representing tokens in the text sequence. This input tensor is feeded then to Multi-Head Attention block to capture token's interaction with other words. 
+Multi-head Attention block is based on Scaled Dot-Product Attention, which we will explain first. 
+
+**Scaled Dot-Product Attention**
+The scaled Dot-Product attention takes as input three matrices Queries $Q$, Keys $K$ and Values $V$ of size $(L, d_{model})$. Those three matrices can be obtained by projecting the input tensor $X$ using Linear layers or replicating the input tensor directly as follows:
+$$Q = XW^{Q} \seq \seq or Q = X$$
+$$K = XW^{K} \seq \seq or K = X$$
+$$V = XW^{V} \seq \seq or V = X$$
+
+Then compute for each token a new representation enriched with information about its meaning and relationships with other tokens using the following formula:
+
+$$Attention(Q, K, V) = softmax(\frac{QK^{T}}{\sqrt(d_k)})V$$
+
+{% include figure.liquid loading="eager" path="assets/llms_from_scratch_img/scaled_dot_product_attention.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+
+The softmax term can be seen as matrix of scores representing how much each word is important to the others. Then multiplying by the V matrices will produce a weighted average of embeddings. 
+
+__Properties:__
+  - Permutation invariant: Changing rows' order will not affect the computation. Here the reason why positional embedding is important.
+  - The softmax term is a matrix of size $L \times L$. If we don't want to take into account interaction between some words, we change their associated values to 0.  
+
+
+**Multi-head Attention**
+Instead of performing single attention with matrices that have $d_{model}$ dimension, it was found that linearly projecting the Q, K, and V matrices $h$ times with different linear projections to $d_k$, $d_k$, $d_v$ respectively. A scaled dot-product attention is performed on each of the $h$ projected versions of Q, K, and V, and yields to $d_v$ dimensional output values. These are concatenated and once again project to result in the final values. 
+The following formula and figure illustrate the process:
+$$MultiHead(Q, K, V) = Concat(head_1, ..., head_h)W^{O}$$
+$$head_i = Attention(QW_{i}^{Q}, KW_{i}^{K}, VW_{i}^{V})$$
+
+{% include figure.liquid loading="eager" path="assets/llms_from_scratch_img/multi_head_attention.png" class="img-fluid rounded z-depth-1" zoomable=true %}
 
 #### Add & Norm Layer
 
