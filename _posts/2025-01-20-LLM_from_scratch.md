@@ -82,22 +82,24 @@ Let's dig into the architecture of a transformer.
 As illustrated in the transformer architecture above, the input embedding and positional encoding block produce an input tensor $X$ of size $(L, d_{model})$ which contains a dense vectors representing tokens in the text sequence. This input tensor is feeded then to Multi-Head Attention block to capture token's interaction with other words. 
 Multi-head Attention block is based on Scaled Dot-Product Attention, which we will explain first. 
 
-<div style="float: right; width: 45%; margin-left: 20px; margin-bottom: 10px;">
-  {% include figure.liquid loading="eager" path="assets/llms_from_scratch_img/scaled_dot_product_attention.png" class="img-fluid rounded z-depth-1" zoomable=true %}
-  <p style="text-align: center; font-style: italic; font-size: 0.9em; color: gray;">Figure: Scaled Dot-Product Attention</p>
-</div>
+
 
 **Scaled Dot-Product Attention**
 The scaled Dot-Product attention takes as input three matrices of size $(L, d_{model})$: Queries $Q$, Keys $K$ and Values $V$. Those three matrices are just the input tensor (often via linear projection) where:
 
 $$Q = X \qquad K = X \qquad V = X$$
 
-The mechanism then compute a new representation for each token,  enriching it with contextual information from other tokens using The following formula and the figure in the right illustrate the mechanism:
+The mechanism then compute a new representation for each token,  enriching it with contextual information from other tokens using The following formula and the figure below illustrate the mechanism:
 
 $$Attention(Q, K, V) = softmax(\frac{QK^{T}}{\sqrt(d_k)})V$$
 
+<div style="float: center; width: 45%; margin-left: 20px; margin-bottom: 10px;">
+  {% include figure.liquid loading="eager" path="assets/llms_from_scratch_img/scaled_dot_product_attention.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+  <p style="text-align: center; font-style: italic; font-size: 0.9em; color: gray;">Figure: Scaled Dot-Product Attention</p>
+</div>
+
 1. Similarity: $QK^{T}$ calculates the similarity between every Query and every Key
-2. Scaling: We divide by $\sqrt(d_k)$ to prevent gradients from vanishing in the softmax.
+2. Scaling: We divide by $\sqrt d_k$ to prevent gradients from vanishing in the softmax.
 3. Weighting: The softmax turns the scaled similarities into attention scores (or probabilities) representing how relevant every other token is to the current token. Multiplying these scores by the V matrix produces a weighted sum of the value embeddings.
 
 
@@ -106,10 +108,7 @@ $$Attention(Q, K, V) = softmax(\frac{QK^{T}}{\sqrt(d_k)})V$$
   - Masking: The score matrix yielded by the Softmax operation has a size of $L \times L$. If we want to prevent interactions between some tokens (like hiding future tokens during training), we apply a mask - setting those scores to $-\infty$, before applying the softmax function, so their probabilities become zeros.
 
 
-<div style="float: right; width: 45%; margin-left: 20px; margin-bottom: 10px;">
-  {% include figure.liquid loading="eager" path="assets/llms_from_scratch_img/multi_head_attention.png" class="img-fluid rounded z-depth-1" zoomable=true %}
-  <p style="text-align: center; font-style: italic; font-size: 0.9em; color: gray;">Figure: The Multi-Head Attention Mechanism</p>
-</div>
+
 
 **Multi-head Attention**
 Multi-HEad attention refines the mechanism and improves the model's performance by allowing it to jointly attend to information from different representation subspaces at different positions. 
@@ -123,9 +122,13 @@ $$MultiHead(Q, K, V) = Concat(head_1, ..., head_h)W^{O}$$
 
 $$head_i = Attention(QW_{i}^{Q}, KW_{i}^{K}, VW_{i}^{V})$$
 
+<div style="float: center; width: 45%; margin-left: 20px; margin-bottom: 10px;">
+  {% include figure.liquid loading="eager" path="assets/llms_from_scratch_img/multi_head_attention.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+  <p style="text-align: center; font-style: italic; font-size: 0.9em; color: gray;">Figure: The Multi-Head Attention Mechanism</p>
+</div>
 
 #### Add & Norm Layer and Residual connection
-
+The output of the multi-head attention block is a tensor $M$ of size $L \times d_{model}$ which is passed to Add & Norm layer. In this layer the input tensor $X$ is added to $M$ via a residual connection. This addition or residual connection prevents from vanishing gradient. Then the output of this addition is normalized. 
 
 #### Feed Forward Layer
 
