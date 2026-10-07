@@ -1,0 +1,14 @@
+<ol class="entry-list">
+  {%- for post in include.posts -%}
+    <li class="entry">
+      <a class="entry-link" href="{{ post.url | relative_url }}">
+        <time class="entry-date" datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%b %-d, %Y" }}</time>
+        <span class="entry-body">
+          <span class="entry-title">{{ post.title }}</span>
+          {%- if post.description and post.description != "" %}<span class="entry-desc">{{ post.description }}</span>{% endif %}
+        </span>
+        <span class="entry-tag">{% include post-label.html post=post %}</span>
+      </a>
+    </li>
+  {%- endfor -%}
+</ol>

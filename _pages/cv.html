@@ -1,0 +1,72 @@
+---
+layout: page
+permalink: /cv/
+title: Curriculum Vitae
+eyebrow: CV
+---
+{%- assign cv = site.data.resume -%}
+
+<section class="cv-section">
+  <h2>Experience</h2>
+  {%- for job in cv.work %}
+  <div class="cv-item">
+    <p class="cv-date">{{ job.startDate }} — {{ job.endDate | replace: "Ongoing", "Present" }}</p>
+    <div>
+      <h3>{{ job.position }}</h3>
+      <p class="cv-org">{{ job.name }}{% if job.location %} · {{ job.location }}{% endif %}</p>
+      {%- assign lines = job.summary | newline_to_br | split: "<br />" %}
+      <ul>{% for line in lines %}<li>{{ line | strip }}</li>{% endfor %}</ul>
+    </div>
+  </div>
+  {%- endfor %}
+</section>
+
+<section class="cv-section">
+  <h2>Education</h2>
+  {%- for edu in cv.education %}
+  <div class="cv-item">
+    <p class="cv-date">{{ edu.startDate | slice: 0, 4 }} — {{ edu.endDate | slice: 0, 4 }}</p>
+    <div>
+      <h3>{{ edu.studyType }}{% if edu.studyType == "Engineering Degree" %} · {{ edu.area }}{% endif %}</h3>
+      <p class="cv-org">{{ edu.institution }} · {{ edu.location }}</p>
+      {%- unless edu.studyType == "Engineering Degree" %}<p>{{ edu.area }}</p>{% endunless %}
+      {%- if edu.courses %}<p class="chips">{% for c in edu.courses %}<span>{{ c }}</span>{% endfor %}</p>{% endif %}
+    </div>
+  </div>
+  {%- endfor %}
+</section>
+
+<section class="cv-section">
+  <h2>Skills</h2>
+  {%- for skill in cv.skills %}
+  <div class="cv-item">
+    <p class="cv-date">{{ skill.name }}</p>
+    <p class="chips">{% for k in skill.keywords %}<span>{{ k }}</span>{% endfor %}</p>
+  </div>
+  {%- endfor %}
+</section>
+
+<section class="cv-section">
+  <h2>Awards</h2>
+  {%- for award in cv.awards %}
+  <div class="cv-item">
+    <p class="cv-date">{{ award.title }}</p>
+    <div>
+      <h3>{{ award.summary }}</h3>
+      <p class="cv-org">{{ award.awarder | replace: "&&", "&" }}</p>
+    </div>
+  </div>
+  {%- endfor %}
+</section>
+
+<section class="cv-section">
+  <h2>Languages &amp; interests</h2>
+  <div class="cv-item">
+    <p class="cv-date">Languages</p>
+    <p class="chips">{% for l in cv.languages %}<span>{{ l.language }} — {{ l.fluency }}</span>{% endfor %}</p>
+  </div>
+  <div class="cv-item">
+    <p class="cv-date">Interests</p>
+    <p class="chips">{% for i in cv.interests %}<span>{{ i.name }}</span>{% endfor %}</p>
+  </div>
+</section>

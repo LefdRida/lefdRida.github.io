@@ -1,0 +1,3 @@
+{%- comment -%} Topic label for a post: first category, else first tag. {%- endcomment -%}
+{%- assign label = include.post.categories | first | default: include.post.tags.first | default: "Article" -%}
+{{- label | remove: "," | replace: "-", " " | capitalize -}}

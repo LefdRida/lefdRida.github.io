@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="{{ site.lang }}">
+<head>
+  {% include head.html %}
+  {%- if page._styles %}<style>{{ page._styles }}</style>{% endif %}
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  {% include header.html %}
+  <main id="main">
+    {{ content }}
+  </main>
+  {% include footer.html %}
+</body>
+</html>

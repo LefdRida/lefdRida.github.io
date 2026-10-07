@@ -119,7 +119,7 @@ $$Q = X \qquad K = X \qquad V = X$$
 
 The mechanism then compute a new representation for each token,  enriching it with contextual information from other tokens using The following formula and the figure below illustrate the mechanism:
 
-$$Attention(Q, K, V) = softmax(\frac{QK^{T}}{\sqrt(d_k)})V$$
+$$\text{Attention}(Q, K, V) = \text{softmax}(\frac{QK^{T}}{\sqrt{d_k}})V$$
 
 <div style="float: center; width: 45%; margin-left: 20px; margin-bottom: 10px;">
   {% include figure.liquid loading="eager" path="assets/llms_from_scratch_img/scaled_dot_product_attention.png" class="img-fluid rounded z-depth-1" zoomable=true %}
@@ -208,45 +208,59 @@ out = torch.log_softmax(proj(x), dim=-1)
 ## Training
 Training an LLM is done through two steps: Pre-training step which consists of training the LLM on a large scale data (billions to trillions of tokens). The result of this step is a base model and it aims only to encode the world knowledge into the models. This means it can generate token in a way to have meaningful generation but not necessarly correct. For example if we ask the base model "when was the first LLM trained" and it answers "1439", it gives a good output but it does not matter if it is true. This step is very expansive as it requires powerful resources that scale up with model's number of parameters and the data. \\
 The Second step is Post-training step which consists of training the base-model on high quality data to align its behavior imporve its capabilities and make it more helpful. For post-training, we can use mainly Supervised fine-tuning (SFT) or reinforcement learning (RL). \\
-Pre-training and SFT consists of optimizing the same loss function and reiforcement learning use different loss function. But the training logic is mainly the same. We will details how we train an LLM in general and then we will give some examples of loss function for RL. \\ 
+Pre-training and SFT consists of optimizing the same loss function and reiforcement learning use different loss function. But the training logic is mainly the same. We will details how we train an LLM in general and then we will give some examples of loss function for RL.
 
-The goal of a language model is to predict the probability of the sequence of tokens. Let ${x_1, x_2, ..., x_n}$ be our sequence. Its probability is $Pr(x_1, x_2, ..., x_n) = \prod_{i=1}{n} Pr(x_i|x_0, x_1, ..., x_{i-1})$.
-When applying the log the sequence probability becomes :  $\log Pr(x_1, x_2, ..., x_n) = \sum_{i=1}{n} \log Pr(x_i|x_0, x_1, ..., x_{i-1}$.
+The goal of a language model is to predict the probability of the sequence of tokens. Let $(x_1, x_2, ..., x_n)$ be our sequence. Its probability is:
+
+$$Pr(x_1, x_2, ..., x_n) = \prod_{i=1}^{n} Pr(x_i|x_0,x_1, ..., x_{i-1})$$
+
+When applying the log the sequence probability becomes:
+
+$$\log Pr(x_1,x_2,...,x_n) = \sum_{i=1}^{n} \log Pr(x_i|x_0, x_1,...,x_{i-1})$$
 
 So, predicting the next token, we mainly want a token having the highest probability as follows:
-$\hat{x_i} = argmax{x_i \in V} Pr((x_i|x_0, x_1, ..., x_{i-1})$.
+
+$$\hat{x_i} = \underset{x_i \in V}{\operatorname{argmax}} \, Pr(x_i|x_0, x_1, ..., x_{i-1})$$
 
 In SFT, the data is composed from input context $x = {x_1, x_2, ..., x_n}$ and the desired output $y = {y_1, y_2, ..., y_T}$. The SFT is a multiclass-classification problem, the loss function used is negative log-likelihood of producing the correct sequence $y$ given the input $x$. This is often implemented as cross-entropy between the predicted class by the model and the true class in the dataset.\\
-At seqeunce step $t$, let $y^{*}_{t}$ the ground truth token and let $\log p_{\theta}(y^{*}_{t}|x_1, ..., x_n, y_1, ..., y_{t-1})$  denote the log-probability of producting the token $y^{*}_t$ by the model. 
+At seqeunce step $t$, let $$y^{*}_{t}$$ the ground truth token and let $$\log p_{\theta}(y^{*}_{t}|x_1, ..., x_n, y_1, ..., y_{t-1})$$  denote the log-probability of producting the token $y^{*}_t$ by the model. 
 
 Then the model optimizes the following Loss function:
 
-$L_{SFT}(\theta) = -E_{(x,y)~D} \sum_{t=1}^{T} \log p_{\theta}(y_{t}|x_1, ..., x_n, y_1, ..., y_{t-1})$
+$$L_{SFT}(\theta) = -E_{(x,y)~D} \sum_{t=1}^{T} \log p_{\theta}(y_{t}|x_1, ..., x_n, y_1, ..., y_{t-1})$$
 
 in Practice we use the following formulation: 
-$L_{SFT}(\theta) = -\frac{1}{T} \sum_{t=1}^{T} \log p_{\theta}(y^{*}_{t}|x_1, ..., x_n, y_1, ..., y_{t-1})$
+
+$$L_{SFT}(\theta) = -\frac{1}{T} \sum_{t=1}^{T} \log p_{\theta}(y^{*}_{t}|x_1, ..., x_n, y_1, ..., y_{t-1})$$
 
 Intuition: The following loss is trying to maximize always the probability of the ground truth token $y^{*}_{t}$ and push it to be 1. The log is applied on the probabilities which have values between $0$ and $1$, so the -log gives values between $+\infty$ and $0$. So minimizing this loss means pushing the -log to be 0 and then the probabilities to be 1. 
 
 ## Inference
 
-At inference, we have a context $x = {x_1, x_2, ..., x_n}$ and we want to generate a sequence  $\hat y = {y_1, y_2, ..., y_T}$ such that $Pr(\hat y | x) = \prod_{t=1}{T} Pr(y_t|x_0,..., x_{n}, y_0, ..., y_{t-1})$ is maximal. So the generation process is as follows: at eacht time step $t$ we generate a token $y_t$ using its conditional probability $Pr(y_t|x_0,..., x_{n}, y_0, ..., y_{t-1})$. Add the generated token to the context which is use after to generate the next token $y_{t+1}$. But how do we use the conditional probabilities to generate the next token? 
+At inference, we have a context  $x=(x_1, x_2, ..., x_n)$   and we want to generate a sequence  $\hat y=(y_1, y_2, ..., y_T)$ such that the following conditional probability is maximal:
+
+$$P ( \hat y | x )=\prod_{t=1}^{T} P (y_t | x_0,..., x_n, y_0, ..., y_{t-1})$$ 
+
+So the generation process is as follows: at eacht time step  $t$  we generate a token  $y_t$  using its conditional probability $P (y_t|x_0,..., x_{n}, y_0, ..., y_{t-1})$  .
+Add the generated token to the context which is use after to generate the next token $y_{t+1}$  . But how do we use the conditional probabilities to generate the next token? 
 
 **Greedy Search Strategy**: This strategy consists of selecting the token with the highest conditional probability at each time step $t$: 
-$\hat y_{t} = argmax_{y_t \in V}{Pr(y_{t} | x_1, ..., x_n, y_1, ..., y_{t-1})}$
+
+$$\hat y_{t} = \underset{y_t \in V}{\operatorname{argmax}} \, P (y_{t}|x_1, ..., x_n, y_1, ..., y_{t-1})$$
 
 Selecting always at each time step $t$ the token with the highest probability does not entail that the the entire output sequence has the maximum joint probability. Maybe selecting the second probable token at time step $t$ could lead to have token with higher probability at timestep $t+1$ than a token yielded by selecting the first probable token at timestep $t$. 
 
 So, while this method is efficient as it sees at each timestep $t$ one token (the most probable token) comparing to other methods that take into account many tokens and keep track of them to generate the sequence (will be explained later). It can miss better tokens as explained above and lead to short-sighted output. 
 
-**Beam Search**: At each timestep $t$ we select $n$ first probable tokens ($n$ is the number of beam). This process is repeated until we reach the predifined maximum length $T$ or end-of-sequence token appears. Then, we will choose the sequence $y$ that have maximum joint probability $P(y|x)$
+**Beam Search**: At each timestep $t$ we select $n$ first probable tokens ($n$ is the number of beam). This process is repeated until we reach the predifined maximum length $T$ or end-of-sequence token appears. 
+Then, we will choose the sequence $y$ that have maximum joint probability $P(y|x)$
 
 **Top-k sampling strategy**: It leverage the probability distribution generated by the language model to select a token randomly from the k most likely options. This method add an element of randomness in the generation process. 
 
-You might hear that temperature controls the creativeness of the LLM. Higher temperature more creative model and lower temperature more deterministice model. Actually, the temperature add another sort of randomness in the generation process. It affects the shape of the probability distribution. 
+You might have heared that temperature controls the creativeness of the LLM. Higher temperature more creative model and lower temperature more deterministice model. Actually, the temperature $\tau$ add another sort of randomness in the generation process. It affects the shape of the probability distribution. 
 The probability distribution is formulated as follows: 
 
-$softmax(x_i) = \frac_{e^{\frac_{x_i}{T}}{\sum_{j}e^{\frac_{x_j}{T}}}$
+$$ \text{softmax}(x_i) = \frac{e^{\frac{x_i}{\tau}}}{\sum_{j} e^{\frac{x_j}{\tau}}} $$
 
 So, higher temperature encourages the probability distribution to be near to a uniform distribution. This is why higher temperature lead to hallucination. Lower temperature increases the probability of the most probable tokens and decreases the probability of unlikely tokens. 
 
@@ -272,8 +286,9 @@ Let's get an intuition by introducting some naive-quantization 8-bit techniques.
 
 **Absolute Maximum Quantization (absmax):** It uses the following formula to convert an FP32/FP16 number to INT8 number: 
 
-$$X_{quant} = round(\frac{127}{\abs{X}}.X)$$
-$$X_{dequant} = round(\frac{max(\abs{X})}{127}.X_{quant})$$
+$$X_{quant} = round(\frac{127}{|{X}|}.X)$$
+
+$$X_{dequant} = round(\frac{max(|{X}|)}{127}.X_{quant})$$
 
 This methods is symetric and it maps weights values to a range of $[-127, 127]$
 
@@ -283,7 +298,9 @@ This methods comes with a loss of precision due to rounding. When applying the d
 **Zero-Point Quantization:** It applies the following formula to perform quantization. 
 
 $$scale = \frac{255}{max(X) - min(X)}$$
+
 $$zeropoint = -round(scale . min(X)) - 128$$
+
 $$X_{quant} = round(scale . X + zeropoint)$$
 
 $$X_{dequant} = \frac{X_{quant} - zeropoint}{scale}$$

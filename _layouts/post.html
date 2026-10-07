@@ -1,0 +1,43 @@
+---
+layout: default
+---
+{%- assign words = content | strip_html | number_of_words -%}
+{%- assign minutes = words | divided_by: 220 | at_least: 1 -%}
+<article class="post">
+  <header class="container post-layout"><div class="post-header">
+    <p class="eyebrow">
+      <span>{% include post-label.html post=page %}</span>
+      <span aria-hidden="true">·</span>
+      <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%B %-d, %Y" }}</time>
+      <span aria-hidden="true">·</span>
+      <span>{{ minutes }} min read</span>
+    </p>
+    <h1 class="display">{{ page.title }}</h1>
+    {%- if page.description and page.description != "" %}<p class="lead">{{ page.description }}</p>{% endif %}
+    <p class="byline">{{ page.authors.first.name | default: site.author }}</p>
+  </div></header>
+
+  <div class="container post-layout">
+    <aside class="toc" aria-label="Contents" hidden>
+      <p class="toc-title">Contents</p>
+      <ol></ol>
+    </aside>
+    <div class="prose">
+      {{ content }}
+    </div>
+  </div>
+
+  <nav class="container post-nav" aria-label="More posts">
+    {%- if page.previous %}<a class="prev" href="{{ page.previous.url | relative_url }}"><span>Previous</span>{{ page.previous.title }}</a>{% else %}<span></span>{% endif -%}
+    {%- if page.next %}<a class="next" href="{{ page.next.url | relative_url }}"><span>Next</span>{{ page.next.title }}</a>{% endif -%}
+  </nav>
+</article>
+
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [["$", "$"], ["\\(", "\\)"]], displayMath: [["$$", "$$"], ["\\[", "\\]"]] },
+    options: { skipHtmlTags: ["script", "noscript", "style", "textarea", "pre", "code"] },
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/medium-zoom@1.1.0/dist/medium-zoom.min.js" defer></script>

@@ -1,0 +1,37 @@
+---
+layout: default
+permalink: /
+title: Rida Lefdali
+photo: /assets/img/rida.jpeg
+---
+
+<div class="container">
+  <section class="hero">
+    <div class="hero-text">
+      <p class="eyebrow">{{ site.role }}</p>
+      <h1 class="display display-xl">Rida Lefdali</h1>
+      <p class="lead">
+I'm Rida, a data scientist passionate about machine learning. I'm looking for a PhD position to work on advancing machine learning techniques and publishing at top-tier venues.
+      </p>
+      {% include social.html %}
+    </div>
+    <img class="hero-photo" src="{{ page.photo | relative_url }}" alt="Portrait of Rida Lefdali" width="280" height="350">
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>Publications</h2>
+      <a class="more" href="{{ '/publications/' | relative_url }}">All publications →</a>
+    </div>
+    {% include publication-list.html %}
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>Latest writing</h2>
+      <a class="more" href="{{ '/posts/' | relative_url }}">All posts →</a>
+    </div>
+    {% assign latest = site.posts | slice: 0, 4 %}
+    {% include post-list.html posts=latest %}
+  </section>
+</div>
