@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://lefdrida.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lefdrida.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-10-07T22:24:21+00:00</updated><id>https://lefdrida.github.io/feed.xml</id><title type="html">Rida Lefdali</title><subtitle>Rida Lefdali — data scientist working on machine learning, LLMs and computer vision. Technical writing on transformers, retrieval-augmented generation and deep learning.</subtitle><author><name>Rida Lefdali</name></author><entry><title type="html">RNN and Hierarchical Attention Network</title><link href="https://lefdrida.github.io/posts/2025/HAN_blog/" rel="alternate" type="text/html" title="RNN and Hierarchical Attention Network" /><published>2025-03-20T15:12:00+00:00</published><updated>2025-03-20T15:12:00+00:00</updated><id>https://lefdrida.github.io/posts/2025/HAN_blog</id><content type="html" xml:base="https://lefdrida.github.io/posts/2025/HAN_blog/"><![CDATA[<p>In this posts, we will try to get familiar with RNN, self-attention and HAN architectures. 
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://lefdrida.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lefdrida.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-10-07T22:57:15+00:00</updated><id>https://lefdrida.github.io/feed.xml</id><title type="html">Rida Lefdali</title><subtitle>Rida Lefdali — data scientist working on machine learning, LLMs and computer vision. Technical writing on transformers, retrieval-augmented generation and deep learning.</subtitle><author><name>Rida Lefdali</name></author><entry><title type="html">RNN and Hierarchical Attention Network</title><link href="https://lefdrida.github.io/posts/2025/HAN_blog/" rel="alternate" type="text/html" title="RNN and Hierarchical Attention Network" /><published>2025-03-20T15:12:00+00:00</published><updated>2025-03-20T15:12:00+00:00</updated><id>https://lefdrida.github.io/posts/2025/HAN_blog</id><content type="html" xml:base="https://lefdrida.github.io/posts/2025/HAN_blog/"><![CDATA[<p>In this posts, we will try to get familiar with RNN, self-attention and HAN architectures. 
 Data exists in many types such as tabular, imgaes, graph, texts etc. Sequential data is data arranged in an ordered sequence. It could be ordered by time, e.g time series, or by position, e.g text. generally, we model the sequence as follows: \((x_{1}, x_{2}, …, x_{T})\), where \((x_{i})\) could be a word in case of a text, a real value in case of a time series etc… .</p>
 
 <p>Recurrent Neural Network are very suitable to work with sequential data and make prediction using this kind of data. In this posts, we will Talk about RNNs and some of its variants, GRU and BiGRU and HAN architecture which uses self attention with BidirGRU. Also, we will see an application of HAN to classify IMDB movie reviews. 
@@ -382,21 +382,15 @@ So, the advantage of the attention mechanism is to have weights releaving the im
 
 <p>The following plots, shows the attention coefficient per words and per sentences of positive and negative  reviews from the test set. The more the sentence or the word is red, the more the attention of this element is high. <em>&lt;|OOV|&gt;</em> means Out Of Vocabulary, is a token to replace words that are not in the training vocabulary.</p>
 
-<p>Example of positive review :</p>
-<div class="col-sm mt-3 mt-md-0">
-    <figure class="figure">
-  <img src="/assets/blog/han_blog/last_review_coeff.png" alt="" loading="eager" decoding="async" />
+<figure class="figure figure-wide">
+<img src="/assets/blog/han_blog/last_review_coeff.png" alt="Attention weights on a **positive** test review. Top: word-level coefficients; bottom: sentence-level coefficients. Darker red means higher attention." loading="lazy" decoding="async" data-zoomable="" />
+<figcaption>Attention weights on a <strong>positive</strong> test review. Top: word-level coefficients; bottom: sentence-level coefficients. Darker red means higher attention.</figcaption>
 </figure>
 
-</div>
-
-<p>Example of Negative review :</p>
-<div class="col-sm mt-3 mt-md-0">
-    <figure class="figure">
-  <img src="/assets/blog/han_blog/neg_review_coeff.png" alt="" loading="eager" decoding="async" />
+<figure class="figure figure-wide">
+<img src="/assets/blog/han_blog/neg_review_coeff.png" alt="Attention weights on a **negative** test review, shown the same way." loading="lazy" decoding="async" data-zoomable="" />
+<figcaption>Attention weights on a <strong>negative</strong> test review, shown the same way.</figcaption>
 </figure>
-
-</div>
 
 <p>From the plots, we can see that words and sentence that relevant and more linked to a positive or negative reviews have a high attention coefficient regarding the other words. 
 For example in the positive review, we have words such as “Brilliant”, “Master Piece”, “Great” which are positive and have a high attention. Same remark for sentences such as “:) First of all, Mulholland Drive is downright brilliant.” or “A masterpiece”. 
@@ -486,8 +480,9 @@ using the schema below:</p>
 
 <p>NUY Depth V2 is a large dataset that contains indoor scenes. The following presents some scene examples from the data and different views of the constructed 3D point of these scenes.</p>
 
-<figure class="figure">
-  <img src="/assets/img/NUY_depth_data.png" alt="" loading="eager" decoding="async" data-zoomable="" />
+<figure class="figure figure-wide">
+<img src="/assets/img/NUY_depth_data.jpg" alt="Five scenes from NYU Depth V2. Each row shows the RGB image, its ground-truth depth map, and the 3D point cloud built from them, seen from the front, left and top." loading="lazy" decoding="async" data-zoomable="" />
+<figcaption>Five scenes from NYU Depth V2. Each row shows the RGB image, its ground-truth depth map, and the 3D point cloud built from them, seen from the front, left and top.</figcaption>
 </figure>
 
 <h2 id="approach-and-architecure">Approach and Architecure</h2>
@@ -1031,8 +1026,9 @@ In depth estimation many losses function have been proposed in the literature su
 
 <p>The pipeline for inference starts by predicting the depth map, on which we apply a sigmoid function to have positive values. The depth map prediction model outputs depth maps with negative values. we Have test using sigmoid, ReLU or Softplus activation function to output the final depth map during training but it led to bad results. Then, we estimate the focal length and the depth shift. To do so, we create a 3D point cloud from a standard focal length and camera optical center. Then we predict refine the focal length by estimating a focal scale from the constructed 3D point. We use the new focal length to construct new 3D point cloud and to refine then the depth by estimating a depth shift. Again use the refined depth to refine another time the focal length. Then we have the final depth and the focal length that we use to generate the final 3D point cloud.</p>
 
-<figure class="figure">
-  <img src="/assets/img/NUY_depth_data_prediction.png" alt="" loading="eager" decoding="async" data-zoomable="" />
+<figure class="figure figure-wide">
+<img src="/assets/img/NUY_depth_data_prediction.jpg" alt="Ground truth versus prediction for three scenes. Rows alternate between ground truth and our prediction: input image, depth map, and point cloud from the front, left and top." loading="lazy" decoding="async" data-zoomable="" />
+<figcaption>Ground truth versus prediction for three scenes. Rows alternate between ground truth and our prediction: input image, depth map, and point cloud from the front, left and top.</figcaption>
 </figure>
 
 <p>Qualitativly, we can see that the approach can capture the global shapes, but the point cloud are very distorded. For example if we compare the left views and top views between group truth and the prediction, we can see easily the huge difference which could be due to the depth prediction.</p>]]></content><author><name>Rida Lefdali</name></author><category term="Technical-post," /><category term="ML" /><summary type="html"><![CDATA[Monocular 3D Mapping]]></summary></entry><entry><title type="html">LLM From Scratch</title><link href="https://lefdrida.github.io/posts/2025/LLM_from_scratch/" rel="alternate" type="text/html" title="LLM From Scratch" /><published>2025-01-20T15:12:00+00:00</published><updated>2025-01-20T15:12:00+00:00</updated><id>https://lefdrida.github.io/posts/2025/LLM_from_scratch</id><content type="html" xml:base="https://lefdrida.github.io/posts/2025/LLM_from_scratch/"><![CDATA[<p>Hi, in this blog, I will try to give an overview about LLMs stacks that can help you to land on any project requiring LLMs.
@@ -1042,13 +1038,125 @@ This post will be updated on a regular basis until it covers all possible aspect
 <h1 id="llm-architecture">LLM architecture</h1>
 <p>Most of modern Large language models (LLMs) are based on decoder-only architecture. As illustrated in the figure below, every architecture use the same logic and workflow. They start with a tokenization step followed by an embedding layer, to produce a representation for each word in the input text. Then, they use a variant of Multi-Head Attention block (such as Masked Grouped Query attention in figure example, Multi-Head Latent Attention in models like DeepSeek V3/R1), Feed Forward block (containing Linear layers with activation function such as SiLU) and a Normalization Layer (e.g Layer Normalization, RMS Norm) to produce a general representation of the input text. This representation is finally passed through a linear layer to output a probability distribution over all the tokens in the vocabulary set of the LLM. This probability is used then to generate the next token. The generated token is added to the initial input text and the resulting in text is feeded to the LLM to generate the second next token until we have the full answer. This process makes LLMs autoregressive models which means to generate a token we need to process all the previous tokens.</p>
 
-<div style="float: center; width: 45%; margin-left: 20px; margin-bottom: 10px;">
-  <figure class="figure">
-  <img src="/assets/llms_from_scratch_img/LLMs_architectures.png" alt="" loading="eager" decoding="async" data-zoomable="" />
-</figure>
-
-  <p style="text-align: center; font-style: italic; font-size: 0.9em; color: gray;">Figure: Scaled Dot-Product Attention</p>
+<figure class="figure figure-wide diagram">
+<div class="d-scroll"><svg class="d-svg" viewBox="0 0 960 640" role="img" aria-label="Decoder-only architectures of Qwen3 4B and Llama 3.2 1B, with the SwiGLU feed-forward layer shown in detail"><defs><marker id="llm-arr" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,1 L10,5 L0,9 z" class="d-head" /></marker></defs>
+<text x="240" y="34" text-anchor="middle" class="d-title acc-a">Qwen3 4B</text>
+<text x="240" y="70" text-anchor="middle" class="d-s">Output probabilities over the vocabulary</text>
+<rect x="150" y="96" width="180" height="28" rx="6" class="b-out" />
+<text x="240" y="114.5" text-anchor="middle" class="d-t">Linear output layer</text>
+<path d="M240,96 L240,78" class="d-line" marker-end="url(#llm-arr)" />
+<rect x="150" y="146" width="180" height="26" rx="6" class="b-norm" />
+<text x="240" y="163.5" text-anchor="middle" class="d-t">RMSNorm</text>
+<path d="M240,146 L240,124" class="d-line" marker-end="url(#llm-arr)" />
+<rect x="122" y="188" width="236" height="292" rx="10" class="d-group acc-a" />
+<text x="352" y="206" text-anchor="end" class="d-s">× 36 layers</text>
+<path d="M240,206 L240,172" class="d-line" marker-end="url(#llm-arr)" />
+<circle cx="240" cy="214" r="8" class="d-op" />
+<path d="M235.6,214 L244.4,214 M240,209.6 L240,218.4" class="d-line" />
+<rect x="150" y="234" width="180" height="30" rx="6" class="b-ffn" />
+<text x="240" y="253.5" text-anchor="middle" class="d-t">Feed-forward</text>
+<path d="M240,234 L240,222" class="d-line" marker-end="url(#llm-arr)" />
+<rect x="150" y="278" width="180" height="26" rx="6" class="b-norm" />
+<text x="240" y="295.5" text-anchor="middle" class="d-t">RMSNorm</text>
+<path d="M240,278 L240,264" class="d-line" marker-end="url(#llm-arr)" />
+<path d="M240,322 L240,304" class="d-line" marker-end="url(#llm-arr)" />
+<circle cx="240" cy="313" r="2.6" class="d-dot" />
+<path d="M240,313 L344,313 L344,214 L248,214" class="d-line" marker-end="url(#llm-arr)" />
+<circle cx="240" cy="330" r="8" class="d-op" />
+<path d="M235.6,330 L244.4,330 M240,325.6 L240,334.4" class="d-line" />
+<rect x="150" y="346" width="180" height="64" rx="6" class="b-attn" />
+<text x="240" y="374.5" text-anchor="middle" class="d-t">Masked grouped-query</text>
+<text x="240" y="390.5" text-anchor="middle" class="d-t">attention</text>
+<path d="M240,346 L240,338" class="d-line" marker-end="url(#llm-arr)" />
+<rect x="150" y="428" width="180" height="26" rx="6" class="b-norm" />
+<text x="240" y="445.5" text-anchor="middle" class="d-t">RMSNorm</text>
+<path d="M240,428 L240,410" class="d-line" marker-end="url(#llm-arr)" />
+<rect x="150" y="506" width="180" height="28" rx="6" class="b-embed" />
+<text x="240" y="524.5" text-anchor="middle" class="d-t">Embedding layer</text>
+<path d="M240,506 L240,454" class="d-line" marker-end="url(#llm-arr)" />
+<circle cx="240" cy="468" r="2.6" class="d-dot" />
+<path d="M240,468 L344,468 L344,330 L248,330" class="d-line" marker-end="url(#llm-arr)" />
+<rect x="150" y="562" width="180" height="28" rx="6" class="b-plain" />
+<text x="240" y="580.5" text-anchor="middle" class="d-t">Tokenized text</text>
+<path d="M240,562 L240,534" class="d-line" marker-end="url(#llm-arr)" />
+<text x="240" y="630" text-anchor="middle" class="d-s">Input text</text>
+<path d="M240,614 L240,590" class="d-line" marker-end="url(#llm-arr)" />
+<rect x="16" y="352" width="96" height="24" rx="6" class="b-pos" />
+<text x="64" y="368.5" text-anchor="middle" class="d-t d-sm">RoPE</text>
+<path d="M112,364 L150,364" class="d-line" marker-end="url(#llm-arr)" />
+<rect x="16" y="384" width="96" height="24" rx="6" class="b-norm d-new" />
+<text x="64" y="400.5" text-anchor="middle" class="d-t d-sm">Q/K RMSNorm</text>
+<path d="M112,396 L150,396" class="d-line" marker-end="url(#llm-arr)" />
+<text x="600" y="34" text-anchor="middle" class="d-title acc-b">Llama 3.2 1B</text>
+<text x="600" y="70" text-anchor="middle" class="d-s">Output probabilities over the vocabulary</text>
+<rect x="510" y="96" width="180" height="28" rx="6" class="b-out" />
+<text x="600" y="114.5" text-anchor="middle" class="d-t">Linear output layer</text>
+<path d="M600,96 L600,78" class="d-line" marker-end="url(#llm-arr)" />
+<rect x="510" y="146" width="180" height="26" rx="6" class="b-norm" />
+<text x="600" y="163.5" text-anchor="middle" class="d-t">RMSNorm</text>
+<path d="M600,146 L600,124" class="d-line" marker-end="url(#llm-arr)" />
+<rect x="482" y="188" width="236" height="292" rx="10" class="d-group acc-b" />
+<text x="712" y="206" text-anchor="end" class="d-s">× 16 layers</text>
+<path d="M600,206 L600,172" class="d-line" marker-end="url(#llm-arr)" />
+<circle cx="600" cy="214" r="8" class="d-op" />
+<path d="M595.6,214 L604.4,214 M600,209.6 L600,218.4" class="d-line" />
+<rect x="510" y="234" width="180" height="30" rx="6" class="b-ffn" />
+<text x="600" y="253.5" text-anchor="middle" class="d-t">Feed-forward</text>
+<path d="M600,234 L600,222" class="d-line" marker-end="url(#llm-arr)" />
+<rect x="510" y="278" width="180" height="26" rx="6" class="b-norm" />
+<text x="600" y="295.5" text-anchor="middle" class="d-t">RMSNorm</text>
+<path d="M600,278 L600,264" class="d-line" marker-end="url(#llm-arr)" />
+<path d="M600,322 L600,304" class="d-line" marker-end="url(#llm-arr)" />
+<circle cx="600" cy="313" r="2.6" class="d-dot" />
+<path d="M600,313 L704,313 L704,214 L608,214" class="d-line" marker-end="url(#llm-arr)" />
+<circle cx="600" cy="330" r="8" class="d-op" />
+<path d="M595.6,330 L604.4,330 M600,325.6 L600,334.4" class="d-line" />
+<rect x="510" y="346" width="180" height="64" rx="6" class="b-attn" />
+<text x="600" y="374.5" text-anchor="middle" class="d-t">Masked grouped-query</text>
+<text x="600" y="390.5" text-anchor="middle" class="d-t">attention</text>
+<path d="M600,346 L600,338" class="d-line" marker-end="url(#llm-arr)" />
+<rect x="510" y="428" width="180" height="26" rx="6" class="b-norm" />
+<text x="600" y="445.5" text-anchor="middle" class="d-t">RMSNorm</text>
+<path d="M600,428 L600,410" class="d-line" marker-end="url(#llm-arr)" />
+<rect x="510" y="506" width="180" height="28" rx="6" class="b-embed" />
+<text x="600" y="524.5" text-anchor="middle" class="d-t">Embedding layer</text>
+<path d="M600,506 L600,454" class="d-line" marker-end="url(#llm-arr)" />
+<circle cx="600" cy="468" r="2.6" class="d-dot" />
+<path d="M600,468 L704,468 L704,330 L608,330" class="d-line" marker-end="url(#llm-arr)" />
+<rect x="510" y="562" width="180" height="28" rx="6" class="b-plain" />
+<text x="600" y="580.5" text-anchor="middle" class="d-t">Tokenized text</text>
+<path d="M600,562 L600,534" class="d-line" marker-end="url(#llm-arr)" />
+<text x="600" y="630" text-anchor="middle" class="d-s">Input text</text>
+<path d="M600,614 L600,590" class="d-line" marker-end="url(#llm-arr)" />
+<rect x="376" y="352" width="96" height="24" rx="6" class="b-pos" />
+<text x="424" y="368.5" text-anchor="middle" class="d-t d-sm">RoPE</text>
+<path d="M472,364 L510,364" class="d-line" marker-end="url(#llm-arr)" />
+<path d="M690,249 L772,300" class="d-leader" />
+<rect x="772" y="206" width="176" height="232" rx="10" class="d-inset" />
+<path d="M860,250 L860,222" class="d-line" marker-end="url(#llm-arr)" />
+<rect x="830" y="250" width="60" height="24" rx="6" class="b-out" />
+<text x="860" y="266.5" text-anchor="middle" class="d-t d-sm">Linear</text>
+<circle cx="860" cy="298" r="8" class="d-op" />
+<path d="M856.7,294.7 L863.3,301.3 M856.7,301.3 L863.3,294.7" class="d-line" />
+<path d="M860,290 L860,274" class="d-line" marker-end="url(#llm-arr)" />
+<rect x="782" y="314" width="60" height="24" rx="6" class="b-ffn" />
+<text x="812" y="330.5" text-anchor="middle" class="d-t d-sm">SiLU</text>
+<path d="M812,314 L812,298 L852,298" class="d-line" marker-end="url(#llm-arr)" />
+<rect x="782" y="352" width="60" height="24" rx="6" class="b-out" />
+<text x="812" y="368.5" text-anchor="middle" class="d-t d-sm">Linear</text>
+<path d="M812,352 L812,338" class="d-line" marker-end="url(#llm-arr)" />
+<rect x="878" y="352" width="60" height="24" rx="6" class="b-out" />
+<text x="908" y="368.5" text-anchor="middle" class="d-t d-sm">Linear</text>
+<path d="M908,352 L908,298 L868,298" class="d-line" marker-end="url(#llm-arr)" />
+<path d="M812,392 L908,392" class="d-line" />
+<path d="M860,404 L860,392" class="d-line" />
+<path d="M812,392 L812,376" class="d-line" marker-end="url(#llm-arr)" />
+<path d="M908,392 L908,376" class="d-line" marker-end="url(#llm-arr)" />
+<text x="860" y="426" text-anchor="middle" class="d-s d-strong">SwiGLU feed-forward</text>
+</svg>
 </div>
+<figcaption>Two modern decoder-only LLMs, Qwen3 4B and Llama 3.2 1B, side by side. Both repeat the same block: RMSNorm, masked grouped-query attention with rotary position embeddings (RoPE), RMSNorm, then a SwiGLU feed-forward layer (detail on the right), each wrapped in a residual connection (⊕). The visible difference is that Qwen3 also normalizes queries and keys (dashed).</figcaption>
+</figure>
 
 <p>To have an idea about each component of an LLM, we will explain the original transformers architecture, which is an encoder-decoder architecture. As all models are based on that architecture and only slight changes made to it.</p>
 
@@ -1063,8 +1171,99 @@ This post will be updated on a regular basis until it covers all possible aspect
 
 <p>Transformers solve these limitation by using a Multi-head attention mechanism to process input tokens in parallel, preserving relationships regardless of distance as illustrated in the figure below.</p>
 
-<figure class="figure">
-  <img src="/assets/llms_from_scratch_img/transormers_arch.png" alt="" loading="eager" decoding="async" data-zoomable="" />
+<figure class="figure figure-2 diagram">
+<div class="d-scroll"><svg class="d-svg" viewBox="0 0 640 744" role="img" aria-label="The encoder-decoder transformer architecture"><defs><marker id="tf-arr" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,1 L10,5 L0,9 z" class="d-head" /></marker></defs>
+<rect x="90" y="386" width="200" height="230" rx="10" class="d-group" />
+<text x="82" y="506" text-anchor="end" class="d-s d-strong">N×</text>
+<rect x="110" y="400" width="160" height="26" rx="6" class="b-norm" />
+<text x="190" y="417.5" text-anchor="middle" class="d-t">Add &amp; norm</text>
+<rect x="110" y="440" width="160" height="28" rx="6" class="b-ffn" />
+<text x="190" y="458.5" text-anchor="middle" class="d-t">Feed-forward</text>
+<path d="M190,440 L190,426" class="d-line" marker-end="url(#tf-arr)" />
+<rect x="110" y="496" width="160" height="26" rx="6" class="b-norm" />
+<text x="190" y="513.5" text-anchor="middle" class="d-t">Add &amp; norm</text>
+<path d="M190,496 L190,468" class="d-line" marker-end="url(#tf-arr)" />
+<circle cx="190" cy="482" r="2.6" class="d-dot" />
+<path d="M190,482 L98,482 L98,413 L110,413" class="d-line" marker-end="url(#tf-arr)" />
+<rect x="110" y="540" width="160" height="40" rx="6" class="b-attn" />
+<text x="190" y="556.5" text-anchor="middle" class="d-t">Multi-head</text>
+<text x="190" y="572.5" text-anchor="middle" class="d-t">attention</text>
+<path d="M190,540 L190,522" class="d-line" marker-end="url(#tf-arr)" />
+<circle cx="190" cy="606" r="2.6" class="d-dot" />
+<path d="M190,606 L98,606 L98,509 L110,509" class="d-line" marker-end="url(#tf-arr)" />
+<circle cx="190" cy="596" r="2.6" class="d-dot" />
+<path d="M190,596 L150,596 L150,580" class="d-line" marker-end="url(#tf-arr)" />
+<path d="M190,596 L230,596 L230,580" class="d-line" marker-end="url(#tf-arr)" />
+<circle cx="190" cy="648" r="9" class="d-op" />
+<path d="M185.05,648 L194.95,648 M190,643.05 L190,652.95" class="d-line" />
+<path d="M190,639 L190,580" class="d-line" marker-end="url(#tf-arr)" />
+<rect x="110" y="672" width="160" height="28" rx="6" class="b-embed" />
+<text x="190" y="690.5" text-anchor="middle" class="d-t">Input embedding</text>
+<path d="M190,672 L190,657" class="d-line" marker-end="url(#tf-arr)" />
+<path d="M190,716 L190,700" class="d-line" marker-end="url(#tf-arr)" />
+<text x="190" y="734" text-anchor="middle" class="d-s">Inputs</text>
+<path d="M181,648 L156,648" class="d-line" />
+<circle cx="142" cy="648" r="14" class="b-pos" />
+<path d="M132,648.00 L133,646.15 L134,644.47 L135,643.15 L136,642.29 L137,642.00 L138,642.29 L139,643.15 L140,644.47 L141,646.15 L142,648.00 L143,649.85 L144,651.53 L145,652.85 L146,653.71 L147,654.00 L148,653.71 L149,652.85 L150,651.53 L151,649.85 L152,648.00" class="d-line" />
+<text x="120" y="644" text-anchor="end" class="d-s">Positional</text>
+<text x="120" y="659" text-anchor="end" class="d-s">encoding</text>
+<rect x="350" y="146" width="200" height="470" rx="10" class="d-group" />
+<text x="558" y="380" text-anchor="start" class="d-s d-strong">×N</text>
+<text x="450" y="30" text-anchor="middle" class="d-s">Output probabilities</text>
+<rect x="370" y="50" width="160" height="28" rx="6" class="b-out" />
+<text x="450" y="68.5" text-anchor="middle" class="d-t">Softmax</text>
+<path d="M450,50 L450,38" class="d-line" marker-end="url(#tf-arr)" />
+<rect x="370" y="98" width="160" height="28" rx="6" class="b-out" />
+<text x="450" y="116.5" text-anchor="middle" class="d-t">Linear</text>
+<path d="M450,98 L450,78" class="d-line" marker-end="url(#tf-arr)" />
+<rect x="370" y="160" width="160" height="26" rx="6" class="b-norm" />
+<text x="450" y="177.5" text-anchor="middle" class="d-t">Add &amp; norm</text>
+<path d="M450,160 L450,126" class="d-line" marker-end="url(#tf-arr)" />
+<rect x="370" y="204" width="160" height="30" rx="6" class="b-ffn" />
+<text x="450" y="223.5" text-anchor="middle" class="d-t">Feed-forward</text>
+<path d="M450,204 L450,186" class="d-line" marker-end="url(#tf-arr)" />
+<circle cx="450" cy="250" r="2.6" class="d-dot" />
+<path d="M450,250 L542,250 L542,173 L530,173" class="d-line" marker-end="url(#tf-arr)" />
+<rect x="370" y="266" width="160" height="26" rx="6" class="b-norm" />
+<text x="450" y="283.5" text-anchor="middle" class="d-t">Add &amp; norm</text>
+<path d="M450,266 L450,234" class="d-line" marker-end="url(#tf-arr)" />
+<rect x="370" y="330" width="160" height="44" rx="6" class="b-attn" />
+<text x="450" y="348.5" text-anchor="middle" class="d-t">Multi-head</text>
+<text x="450" y="364.5" text-anchor="middle" class="d-t">attention</text>
+<path d="M450,330 L450,292" class="d-line" marker-end="url(#tf-arr)" />
+<path d="M450,438 L450,374" class="d-line" marker-end="url(#tf-arr)" />
+<circle cx="450" cy="420" r="2.6" class="d-dot" />
+<path d="M450,420 L542,420 L542,279 L530,279" class="d-line" marker-end="url(#tf-arr)" />
+<rect x="370" y="438" width="160" height="26" rx="6" class="b-norm" />
+<text x="450" y="455.5" text-anchor="middle" class="d-t">Add &amp; norm</text>
+<rect x="370" y="500" width="160" height="44" rx="6" class="b-attn" />
+<text x="450" y="518.5" text-anchor="middle" class="d-t">Masked multi-head</text>
+<text x="450" y="534.5" text-anchor="middle" class="d-t">attention</text>
+<path d="M450,500 L450,464" class="d-line" marker-end="url(#tf-arr)" />
+<circle cx="450" cy="584" r="2.6" class="d-dot" />
+<path d="M450,584 L542,584 L542,451 L530,451" class="d-line" marker-end="url(#tf-arr)" />
+<circle cx="450" cy="566" r="2.6" class="d-dot" />
+<path d="M450,566 L410,566 L410,544" class="d-line" marker-end="url(#tf-arr)" />
+<path d="M450,566 L490,566 L490,544" class="d-line" marker-end="url(#tf-arr)" />
+<circle cx="450" cy="648" r="9" class="d-op" />
+<path d="M445.05,648 L454.95,648 M450,643.05 L450,652.95" class="d-line" />
+<path d="M450,639 L450,544" class="d-line" marker-end="url(#tf-arr)" />
+<rect x="370" y="672" width="160" height="28" rx="6" class="b-embed" />
+<text x="450" y="690.5" text-anchor="middle" class="d-t">Output embedding</text>
+<path d="M450,672 L450,657" class="d-line" marker-end="url(#tf-arr)" />
+<path d="M450,716 L450,700" class="d-line" marker-end="url(#tf-arr)" />
+<text x="450" y="734" text-anchor="middle" class="d-s">Outputs (shifted right)</text>
+<path d="M459,648 L484,648" class="d-line" />
+<circle cx="498" cy="648" r="14" class="b-pos" />
+<path d="M488,648.00 L489,646.15 L490,644.47 L491,643.15 L492,642.29 L493,642.00 L494,642.29 L495,643.15 L496,644.47 L497,646.15 L498,648.00 L499,649.85 L500,651.53 L501,652.85 L502,653.71 L503,654.00 L504,653.71 L505,652.85 L506,651.53 L507,649.85 L508,648.00" class="d-line" />
+<text x="520" y="644" text-anchor="start" class="d-s">Positional</text>
+<text x="520" y="659" text-anchor="start" class="d-s">encoding</text>
+<path d="M190,400 L190,366 L318,366 L318,392 L400,392 L400,374" class="d-line" marker-end="url(#tf-arr)" />
+<circle cx="422" cy="392" r="2.6" class="d-dot" />
+<path d="M422,392 L422,374" class="d-line" marker-end="url(#tf-arr)" />
+</svg>
+</div>
+<figcaption>The original encoder–decoder transformer (Vaswani et al., 2017). The encoder (left) builds a representation of the input; the decoder (right) generates the output one token at a time, attending to its own previous tokens and, through cross-attention, to the encoder output.</figcaption>
 </figure>
 
 <p>Let’s dig into the architecture of a transformer.</p>
@@ -1075,16 +1274,208 @@ This post will be updated on a regular basis until it covers all possible aspect
   <li><strong>From text to Tokens:</strong> The input to an LLM is a sequence of tokens ids, denoted as $s=(t_1, t_2, …, t_L)$ ($L$ represents the length of the sequence). These tokens ids are generated by a tokenizer (a process we will cover later), which takes the sentence and splits it into words or sub-words called tokens and finally each token is mapped to its own id. Each LLM have its own tokenizer, for example tokenizer of GPT is different from LLama and so on. The figure below ilustrate this process on the sentence “The mind of man is capable of anything.” (taken from heart of darkness by Joseph Conrad)</li>
 </ol>
 
-<figure class="figure">
-  <img src="/assets/llms_from_scratch_img/tokenization_step.png" alt="" loading="eager" decoding="async" data-zoomable="" />
+<figure class="figure figure-2 diagram">
+<div class="d-scroll"><svg class="d-svg" viewBox="0 0 700 184" role="img" aria-label="A sentence split into tokens, each mapped to an integer id"><defs><marker id="tok-arr" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,1 L10,5 L0,9 z" class="d-head" /></marker></defs>
+<text x="350" y="34" text-anchor="middle" class="d-sentence">The mind of man is capable of anything.</text>
+<path d="M350,50 L350,92" class="d-line" marker-end="url(#tok-arr)" />
+<text x="362" y="76" text-anchor="start" class="d-s d-accent">tokenize</text>
+<text x="91.2" y="125" text-anchor="end" class="d-s">tokens</text>
+<text x="91.2" y="164" text-anchor="end" class="d-s">ids</text>
+<rect x="103.2" y="104" width="43.4" height="32" rx="6" class="b-token" />
+<text x="124.9" y="124.5" text-anchor="middle" class="d-mono">The</text>
+<text x="124.9" y="164" text-anchor="middle" class="d-mono d-muted">791</text>
+<rect x="154.6" y="104" width="51.2" height="32" rx="6" class="b-token" />
+<text x="180.2" y="124.5" text-anchor="middle" class="d-mono">mind</text>
+<text x="180.2" y="164" text-anchor="middle" class="d-mono d-muted">4059</text>
+<rect x="213.8" y="104" width="35.6" height="32" rx="6" class="b-token" />
+<text x="231.6" y="124.5" text-anchor="middle" class="d-mono">of</text>
+<text x="231.6" y="164" text-anchor="middle" class="d-mono d-muted">315</text>
+<rect x="257.4" y="104" width="43.4" height="32" rx="6" class="b-token" />
+<text x="279.1" y="124.5" text-anchor="middle" class="d-mono">man</text>
+<text x="279.1" y="164" text-anchor="middle" class="d-mono d-muted">893</text>
+<rect x="308.8" y="104" width="35.6" height="32" rx="6" class="b-token" />
+<text x="326.6" y="124.5" text-anchor="middle" class="d-mono">is</text>
+<text x="326.6" y="164" text-anchor="middle" class="d-mono d-muted">374</text>
+<rect x="352.4" y="104" width="74.6" height="32" rx="6" class="b-token" />
+<text x="389.7" y="124.5" text-anchor="middle" class="d-mono">capable</text>
+<text x="389.7" y="164" text-anchor="middle" class="d-mono d-muted">13171</text>
+<rect x="435.0" y="104" width="35.6" height="32" rx="6" class="b-token" />
+<text x="452.8" y="124.5" text-anchor="middle" class="d-mono">of</text>
+<text x="452.8" y="164" text-anchor="middle" class="d-mono d-muted">315</text>
+<rect x="478.6" y="104" width="82.4" height="32" rx="6" class="b-token" />
+<text x="519.8" y="124.5" text-anchor="middle" class="d-mono">anything</text>
+<text x="519.8" y="164" text-anchor="middle" class="d-mono d-muted">4205</text>
+<rect x="569.0" y="104" width="27.8" height="32" rx="6" class="b-token" />
+<text x="582.9" y="124.5" text-anchor="middle" class="d-mono">.</text>
+<text x="582.9" y="164" text-anchor="middle" class="d-mono d-muted">13</text>
+</svg>
+</div>
+<figcaption>Tokenization of a sentence from <em>Heart of Darkness</em>. The tokenizer splits the text into tokens, then maps each token to its integer id in the model vocabulary.</figcaption>
 </figure>
 
 <ol>
   <li><strong>The embedding Layer:</strong> Once tokenized, the sequence is passed through an embedding layer (it is learnable). This maps discrete tokens’ ids to dense vectors. If we assume the embedding dimension is $d_{model}$ (e.g $d_{model}=512$), this step outputs a tensor of shape $(L, d_{model})$. So, each token id $t_{i}$ is now represented by a dense vector of dimension $d_{model}=512$</li>
 </ol>
 
-<figure class="figure">
-  <img src="/assets/llms_from_scratch_img/embedding_layer.png" alt="" loading="eager" decoding="async" data-zoomable="" />
+<figure class="figure figure-2 diagram">
+<div class="d-scroll"><svg class="d-svg" viewBox="0 0 700 330" role="img" aria-label="Token ids mapped through the embedding layer to dense vectors"><defs><marker id="emb-arr" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,1 L10,5 L0,9 z" class="d-head" /></marker></defs>
+<text x="65" y="26" text-anchor="middle" class="d-s">tokens</text>
+<text x="200" y="26" text-anchor="middle" class="d-s">ids</text>
+<text x="504" y="26" text-anchor="middle" class="d-s">embeddings  (L × d_model)</text>
+<rect x="20" y="46" width="90" height="22" rx="5" class="b-token" />
+<text x="65" y="61.5" text-anchor="middle" class="d-mono d-sm">The</text>
+<text x="200" y="61.5" text-anchor="middle" class="d-mono">791</text>
+<rect x="320" y="46" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.42" />
+<rect x="349" y="46" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.66" />
+<rect x="378" y="46" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.84" />
+<rect x="407" y="46" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.15" />
+<rect x="436" y="46" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.26" />
+<rect x="465" y="46" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.29" />
+<rect x="494" y="46" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.48" />
+<rect x="523" y="46" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.90" />
+<rect x="552" y="46" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.18" />
+<rect x="581" y="46" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.58" />
+<rect x="632" y="46" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.20" />
+<rect x="661" y="46" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.27" />
+<text x="618" y="61" text-anchor="middle" class="d-s">…</text>
+<rect x="20" y="74" width="90" height="22" rx="5" class="b-token" />
+<text x="65" y="89.5" text-anchor="middle" class="d-mono d-sm">mind</text>
+<text x="200" y="89.5" text-anchor="middle" class="d-mono">4059</text>
+<rect x="320" y="74" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.22" />
+<rect x="349" y="74" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.38" />
+<rect x="378" y="74" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.21" />
+<rect x="407" y="74" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.32" />
+<rect x="436" y="74" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.89" />
+<rect x="465" y="74" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.34" />
+<rect x="494" y="74" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.63" />
+<rect x="523" y="74" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.34" />
+<rect x="552" y="74" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.16" />
+<rect x="581" y="74" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.66" />
+<rect x="632" y="74" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.42" />
+<rect x="661" y="74" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.71" />
+<text x="618" y="89" text-anchor="middle" class="d-s">…</text>
+<rect x="20" y="102" width="90" height="22" rx="5" class="b-token" />
+<text x="65" y="117.5" text-anchor="middle" class="d-mono d-sm">of</text>
+<text x="200" y="117.5" text-anchor="middle" class="d-mono">315</text>
+<rect x="320" y="102" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.36" />
+<rect x="349" y="102" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.55" />
+<rect x="378" y="102" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.25" />
+<rect x="407" y="102" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.19" />
+<rect x="436" y="102" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.75" />
+<rect x="465" y="102" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.46" />
+<rect x="494" y="102" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.67" />
+<rect x="523" y="102" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.58" />
+<rect x="552" y="102" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.13" />
+<rect x="581" y="102" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.42" />
+<rect x="632" y="102" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.46" />
+<rect x="661" y="102" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.62" />
+<text x="618" y="117" text-anchor="middle" class="d-s">…</text>
+<rect x="20" y="130" width="90" height="22" rx="5" class="b-token" />
+<text x="65" y="145.5" text-anchor="middle" class="d-mono d-sm">man</text>
+<text x="200" y="145.5" text-anchor="middle" class="d-mono">893</text>
+<rect x="320" y="130" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.51" />
+<rect x="349" y="130" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.43" />
+<rect x="378" y="130" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.21" />
+<rect x="407" y="130" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.12" />
+<rect x="436" y="130" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.75" />
+<rect x="465" y="130" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.63" />
+<rect x="494" y="130" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.52" />
+<rect x="523" y="130" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.57" />
+<rect x="552" y="130" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.13" />
+<rect x="581" y="130" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.44" />
+<rect x="632" y="130" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.61" />
+<rect x="661" y="130" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.47" />
+<text x="618" y="145" text-anchor="middle" class="d-s">…</text>
+<rect x="20" y="158" width="90" height="22" rx="5" class="b-token" />
+<text x="65" y="173.5" text-anchor="middle" class="d-mono d-sm">is</text>
+<text x="200" y="173.5" text-anchor="middle" class="d-mono">374</text>
+<rect x="320" y="158" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.19" />
+<rect x="349" y="158" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.17" />
+<rect x="378" y="158" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.39" />
+<rect x="407" y="158" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.39" />
+<rect x="436" y="158" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.94" />
+<rect x="465" y="158" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.32" />
+<rect x="494" y="158" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.48" />
+<rect x="523" y="158" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.14" />
+<rect x="552" y="158" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.23" />
+<rect x="581" y="158" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.82" />
+<rect x="632" y="158" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.44" />
+<rect x="661" y="158" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.65" />
+<text x="618" y="173" text-anchor="middle" class="d-s">…</text>
+<rect x="20" y="186" width="90" height="22" rx="5" class="b-token" />
+<text x="65" y="201.5" text-anchor="middle" class="d-mono d-sm">capable</text>
+<text x="200" y="201.5" text-anchor="middle" class="d-mono">13171</text>
+<rect x="320" y="186" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.59" />
+<rect x="349" y="186" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.40" />
+<rect x="378" y="186" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.23" />
+<rect x="407" y="186" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.15" />
+<rect x="436" y="186" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.71" />
+<rect x="465" y="186" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.70" />
+<rect x="494" y="186" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.45" />
+<rect x="523" y="186" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.60" />
+<rect x="552" y="186" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.14" />
+<rect x="581" y="186" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.40" />
+<rect x="632" y="186" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.65" />
+<rect x="661" y="186" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.38" />
+<text x="618" y="201" text-anchor="middle" class="d-s">…</text>
+<rect x="20" y="214" width="90" height="22" rx="5" class="b-token" />
+<text x="65" y="229.5" text-anchor="middle" class="d-mono d-sm">of</text>
+<text x="200" y="229.5" text-anchor="middle" class="d-mono">315</text>
+<rect x="320" y="214" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.36" />
+<rect x="349" y="214" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.55" />
+<rect x="378" y="214" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.25" />
+<rect x="407" y="214" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.19" />
+<rect x="436" y="214" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.75" />
+<rect x="465" y="214" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.46" />
+<rect x="494" y="214" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.67" />
+<rect x="523" y="214" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.58" />
+<rect x="552" y="214" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.13" />
+<rect x="581" y="214" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.42" />
+<rect x="632" y="214" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.46" />
+<rect x="661" y="214" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.62" />
+<text x="618" y="229" text-anchor="middle" class="d-s">…</text>
+<rect x="20" y="242" width="90" height="22" rx="5" class="b-token" />
+<text x="65" y="257.5" text-anchor="middle" class="d-mono d-sm">anything</text>
+<text x="200" y="257.5" text-anchor="middle" class="d-mono">4205</text>
+<rect x="320" y="242" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.49" />
+<rect x="349" y="242" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.47" />
+<rect x="378" y="242" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.92" />
+<rect x="407" y="242" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.25" />
+<rect x="436" y="242" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.34" />
+<rect x="465" y="242" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.25" />
+<rect x="494" y="242" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.31" />
+<rect x="523" y="242" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.90" />
+<rect x="552" y="242" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.38" />
+<rect x="581" y="242" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.59" />
+<rect x="632" y="242" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.31" />
+<rect x="661" y="242" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.16" />
+<text x="618" y="257" text-anchor="middle" class="d-s">…</text>
+<rect x="20" y="270" width="90" height="22" rx="5" class="b-token" />
+<text x="65" y="285.5" text-anchor="middle" class="d-mono d-sm">.</text>
+<text x="200" y="285.5" text-anchor="middle" class="d-mono">13</text>
+<rect x="320" y="270" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.93" />
+<rect x="349" y="270" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.39" />
+<rect x="378" y="270" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.33" />
+<rect x="407" y="270" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.24" />
+<rect x="436" y="270" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.18" />
+<rect x="465" y="270" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.87" />
+<rect x="494" y="270" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.55" />
+<rect x="523" y="270" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.51" />
+<rect x="552" y="270" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.37" />
+<rect x="581" y="270" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.12" />
+<rect x="632" y="270" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.63" />
+<rect x="661" y="270" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.62" />
+<text x="618" y="285" text-anchor="middle" class="d-s">…</text>
+<path d="M118,169 L166,169" class="d-line" marker-end="url(#emb-arr)" />
+<text x="142" y="159" text-anchor="middle" class="d-xs">lookup</text>
+<path d="M234,169 L306,169" class="d-line" marker-end="url(#emb-arr)" />
+<text x="270" y="147" text-anchor="middle" class="d-xs">embedding</text>
+<text x="270" y="159" text-anchor="middle" class="d-xs">layer</text>
+<path d="M320,316 L688,316" class="d-leader" />
+<text x="504" y="310" text-anchor="middle" class="d-xs">d_model = 512</text>
+</svg>
+</div>
+<figcaption>The embedding layer is a lookup table: each token id selects one learned row, so a sequence of L tokens becomes an L × d_model tensor. Cell colour shows the sign and magnitude of each component (values are illustrative).</figcaption>
 </figure>
 
 <p>We can use nn module of pytorch to code the embedding layer as follows.</p>
@@ -1123,13 +1514,43 @@ The scaled Dot-Product attention takes as input three matrices of size $(L, d_{m
 
 \[\text{Attention}(Q, K, V) = \text{softmax}(\frac{QK^{T}}{\sqrt{d_k}})V\]
 
-<div style="float: center; width: 45%; margin-left: 20px; margin-bottom: 10px;">
-  <figure class="figure">
-  <img src="/assets/llms_from_scratch_img/scaled_dot_product_attention.png" alt="" loading="eager" decoding="async" data-zoomable="" />
-</figure>
-
-  <p style="text-align: center; font-style: italic; font-size: 0.9em; color: gray;">Figure: Scaled Dot-Product Attention</p>
+<figure class="figure figure-small diagram">
+<div class="d-scroll"><svg class="d-svg" viewBox="0 0 540 384" role="img" aria-label="Scaled dot-product attention"><defs><marker id="sdpa-arr" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,1 L10,5 L0,9 z" class="d-head" /></marker></defs>
+<path d="M190,40 L190,12" class="d-line" marker-end="url(#sdpa-arr)" />
+<rect x="90" y="40" width="200" height="28" rx="6" class="b-attn" />
+<text x="190" y="58.5" text-anchor="middle" class="d-t">MatMul</text>
+<rect x="90" y="100" width="120" height="28" rx="6" class="b-embed" />
+<text x="150" y="118.5" text-anchor="middle" class="d-t">Softmax</text>
+<path d="M150,100 L150,68" class="d-line" marker-end="url(#sdpa-arr)" />
+<rect x="90" y="160" width="120" height="28" rx="6" class="b-plain d-dashed" />
+<text x="150" y="178.5" text-anchor="middle" class="d-t d-sm">Mask (optional)</text>
+<path d="M150,160 L150,128" class="d-line" marker-end="url(#sdpa-arr)" />
+<rect x="90" y="220" width="120" height="28" rx="6" class="b-norm" />
+<text x="150" y="238.5" text-anchor="middle" class="d-t">Scale</text>
+<path d="M150,220 L150,188" class="d-line" marker-end="url(#sdpa-arr)" />
+<rect x="90" y="280" width="120" height="28" rx="6" class="b-attn" />
+<text x="150" y="298.5" text-anchor="middle" class="d-t">MatMul</text>
+<path d="M150,280 L150,248" class="d-line" marker-end="url(#sdpa-arr)" />
+<text x="120" y="370" text-anchor="middle" class="d-t d-strong">Q</text>
+<path d="M120,352 L120,308" class="d-line" marker-end="url(#sdpa-arr)" />
+<text x="180" y="370" text-anchor="middle" class="d-t d-strong">K</text>
+<path d="M180,352 L180,308" class="d-line" marker-end="url(#sdpa-arr)" />
+<text x="260" y="370" text-anchor="middle" class="d-t d-strong">V</text>
+<path d="M260,352 L260,68" class="d-line" marker-end="url(#sdpa-arr)" />
+<path d="M300,54 L316,54" class="d-leader" />
+<text x="324" y="58" text-anchor="start" class="d-s">weighted sum of the values</text>
+<path d="M220,114 L316,114" class="d-leader" />
+<text x="324" y="118" text-anchor="start" class="d-s">each row becomes a distribution</text>
+<path d="M220,174 L316,174" class="d-leader" />
+<text x="324" y="178" text-anchor="start" class="d-s">future positions set to −∞</text>
+<path d="M220,234 L316,234" class="d-leader" />
+<text x="324" y="238" text-anchor="start" class="d-s">divide by √d<tspan class="d-sub" dy="3">k</tspan></text>
+<path d="M220,294 L316,294" class="d-leader" />
+<text x="324" y="298" text-anchor="start" class="d-s">QKᵀ: an L × L score matrix</text>
+</svg>
 </div>
+<figcaption>Scaled dot-product attention, adapted from Vaswani et al. (2017). Notes on the right describe what each step does to the L × L score matrix.</figcaption>
+</figure>
 
 <ol>
   <li>Similarity: $QK^{T}$ calculates the similarity between every Query and every Key</li>
@@ -1165,13 +1586,54 @@ The following formula and figure illustrate the process:</p>
 
 \[head_i = Attention(QW_{i}^{Q}, KW_{i}^{K}, VW_{i}^{V})\]
 
-<div style="float: center; width: 45%; margin-left: 20px; margin-bottom: 10px;">
-  <figure class="figure">
-  <img src="/assets/llms_from_scratch_img/multi_head_attention.png" alt="" loading="eager" decoding="async" data-zoomable="" />
-</figure>
-
-  <p style="text-align: center; font-style: italic; font-size: 0.9em; color: gray;">Figure: The Multi-Head Attention Mechanism</p>
+<figure class="figure figure-small diagram">
+<div class="d-scroll"><svg class="d-svg" viewBox="0 0 640 430" role="img" aria-label="Multi-head attention: h parallel scaled dot-product attention heads"><defs><marker id="mha-arr" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,1 L10,5 L0,9 z" class="d-head" /></marker></defs>
+<rect x="210" y="46" width="100" height="28" rx="6" class="b-out" />
+<text x="260" y="64.5" text-anchor="middle" class="d-t">Linear</text>
+<path d="M260,46 L260,16" class="d-line" marker-end="url(#mha-arr)" />
+<rect x="200" y="106" width="120" height="28" rx="6" class="b-norm" />
+<text x="260" y="124.5" text-anchor="middle" class="d-t">Concat</text>
+<path d="M260,106 L260,74" class="d-line" marker-end="url(#mha-arr)" />
+<rect x="146" y="170" width="260" height="48" rx="6" class="b-attn" opacity="0.35" />
+<rect x="138" y="178" width="260" height="48" rx="6" class="b-attn" opacity="0.6" />
+<rect x="130" y="186" width="260" height="48" rx="6" class="b-attn" />
+<text x="260" y="206.5" text-anchor="middle" class="d-t">Scaled dot-product</text>
+<text x="260" y="222.5" text-anchor="middle" class="d-t">attention</text>
+<path d="M260,186 L260,134" class="d-line" marker-end="url(#mha-arr)" />
+<rect x="121" y="284" width="90" height="28" rx="6" class="b-out" opacity="0.35" />
+<rect x="113" y="292" width="90" height="28" rx="6" class="b-out" opacity="0.6" />
+<rect x="105" y="300" width="90" height="28" rx="6" class="b-out" />
+<text x="150" y="318.5" text-anchor="middle" class="d-t">Linear</text>
+<path d="M150,300 L150,234" class="d-line" marker-end="url(#mha-arr)" />
+<path d="M150,392 L150,328" class="d-line" marker-end="url(#mha-arr)" />
+<text x="150" y="412" text-anchor="middle" class="d-t d-strong">V</text>
+<rect x="231" y="284" width="90" height="28" rx="6" class="b-out" opacity="0.35" />
+<rect x="223" y="292" width="90" height="28" rx="6" class="b-out" opacity="0.6" />
+<rect x="215" y="300" width="90" height="28" rx="6" class="b-out" />
+<text x="260" y="318.5" text-anchor="middle" class="d-t">Linear</text>
+<path d="M260,300 L260,234" class="d-line" marker-end="url(#mha-arr)" />
+<path d="M260,392 L260,328" class="d-line" marker-end="url(#mha-arr)" />
+<text x="260" y="412" text-anchor="middle" class="d-t d-strong">K</text>
+<rect x="341" y="284" width="90" height="28" rx="6" class="b-out" opacity="0.35" />
+<rect x="333" y="292" width="90" height="28" rx="6" class="b-out" opacity="0.6" />
+<rect x="325" y="300" width="90" height="28" rx="6" class="b-out" />
+<text x="370" y="318.5" text-anchor="middle" class="d-t">Linear</text>
+<path d="M370,300 L370,234" class="d-line" marker-end="url(#mha-arr)" />
+<path d="M370,392 L370,328" class="d-line" marker-end="url(#mha-arr)" />
+<text x="370" y="412" text-anchor="middle" class="d-t d-strong">Q</text>
+<path d="M414,170 L422,170 L422,218 L414,218" class="d-leader" />
+<path d="M316,60 L446,60" class="d-leader" />
+<text x="454" y="64" text-anchor="start" class="d-s">output projection W<tspan class="d-sup" dy="-5">O</tspan></text>
+<path d="M326,120 L446,120" class="d-leader" />
+<text x="454" y="124" text-anchor="start" class="d-s">join the h head outputs</text>
+<path d="M428,194 L446,194" class="d-leader" />
+<text x="454" y="198" text-anchor="start" class="d-s">h heads in parallel</text>
+<path d="M437,314 L446,314" class="d-leader" />
+<text x="454" y="318" text-anchor="start" class="d-s">per-head projections</text>
+</svg>
 </div>
+<figcaption>Multi-head attention, adapted from Vaswani et al. (2017): Q, K and V are projected h times, attention runs on every head in parallel, and the results are concatenated and projected back to d_model.</figcaption>
+</figure>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">W_q</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="nc">Linear</span><span class="p">(</span><span class="n">d_model</span><span class="p">,</span> <span class="n">d_model</span><span class="p">)</span>
 <span class="n">W_k</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="nc">Linear</span><span class="p">(</span><span class="n">d_model</span><span class="p">,</span> <span class="n">d_model</span><span class="p">)</span>

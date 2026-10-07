@@ -61,7 +61,7 @@
     <a class="brand" href="/">Rida Lefdali</a>
     <nav class="nav" aria-label="Main">
       
-        <a href="/posts/" aria-current="page">Writing</a>
+        <a href="/posts/" aria-current="page">Blogs</a>
       
         <a href="/publications/">Publications</a>
       
@@ -479,21 +479,15 @@ So, the advantage of the attention mechanism is to have weights releaving the im
 
 <p>The following plots, shows the attention coefficient per words and per sentences of positive and negative  reviews from the test set. The more the sentence or the word is red, the more the attention of this element is high. <em>&lt;|OOV|&gt;</em> means Out Of Vocabulary, is a token to replace words that are not in the training vocabulary.</p>
 
-<p>Example of positive review :</p>
-<div class="col-sm mt-3 mt-md-0">
-    <figure class="figure">
-  <img src="/assets/blog/han_blog/last_review_coeff.png" alt="" loading="eager" decoding="async" />
+<figure class="figure figure-wide">
+<img src="/assets/blog/han_blog/last_review_coeff.png" alt="Attention weights on a **positive** test review. Top: word-level coefficients; bottom: sentence-level coefficients. Darker red means higher attention." loading="lazy" decoding="async" data-zoomable="" />
+<figcaption>Attention weights on a <strong>positive</strong> test review. Top: word-level coefficients; bottom: sentence-level coefficients. Darker red means higher attention.</figcaption>
 </figure>
 
-</div>
-
-<p>Example of Negative review :</p>
-<div class="col-sm mt-3 mt-md-0">
-    <figure class="figure">
-  <img src="/assets/blog/han_blog/neg_review_coeff.png" alt="" loading="eager" decoding="async" />
+<figure class="figure figure-wide">
+<img src="/assets/blog/han_blog/neg_review_coeff.png" alt="Attention weights on a **negative** test review, shown the same way." loading="lazy" decoding="async" data-zoomable="" />
+<figcaption>Attention weights on a <strong>negative</strong> test review, shown the same way.</figcaption>
 </figure>
-
-</div>
 
 <p>From the plots, we can see that words and sentence that relevant and more linked to a positive or negative reviews have a high attention coefficient regarding the other words. 
 For example in the positive review, we have words such as “Brilliant”, “Master Piece”, “Great” which are positive and have a high attention. Same remark for sentences such as “:) First of all, Mulholland Drive is downright brilliant.” or “A masterpiece”. 
