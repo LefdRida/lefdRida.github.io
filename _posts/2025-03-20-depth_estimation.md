@@ -141,7 +141,7 @@ def generate_point_cloud(depth_map, intrinsic_matrix, depth_info, rgb_image=None
 NUY Depth V2 is a large dataset that contains indoor scenes. The following presents some scene examples from the data and different views of the constructed 3D point of these scenes.
 
 
-{% include figure.liquid loading="eager" path="assets/img/NUY_depth_data.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+{% include figure.liquid path="assets/img/NUY_depth_data.jpg" size="wide" zoomable=true caption="Five scenes from NYU Depth V2. Each row shows the RGB image, its ground-truth depth map, and the 3D point cloud built from them, seen from the front, left and top." %}
 
 ## Approach and Architecure
 
@@ -659,7 +659,7 @@ The table below resume the evaluation metrics on both dataset and we have the ad
 The pipeline for inference starts by predicting the depth map, on which we apply a sigmoid function to have positive values. The depth map prediction model outputs depth maps with negative values. we Have test using sigmoid, ReLU or Softplus activation function to output the final depth map during training but it led to bad results. Then, we estimate the focal length and the depth shift. To do so, we create a 3D point cloud from a standard focal length and camera optical center. Then we predict refine the focal length by estimating a focal scale from the constructed 3D point. We use the new focal length to construct new 3D point cloud and to refine then the depth by estimating a depth shift. Again use the refined depth to refine another time the focal length. Then we have the final depth and the focal length that we use to generate the final 3D point cloud. 
 
 
-{% include figure.liquid loading="eager" path="assets/img/NUY_depth_data_prediction.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+{% include figure.liquid path="assets/img/NUY_depth_data_prediction.jpg" size="wide" zoomable=true caption="Ground truth versus prediction for three scenes. Rows alternate between ground truth and our prediction: input image, depth map, and point cloud from the front, left and top." %}
 
 Qualitativly, we can see that the approach can capture the global shapes, but the point cloud are very distorded. For example if we compare the left views and top views between group truth and the prediction, we can see easily the huge difference which could be due to the depth prediction.
 

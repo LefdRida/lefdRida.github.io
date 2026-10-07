@@ -1,7 +1,15 @@
 {%- comment -%}
-  Usage: {% include figure.liquid path="assets/img/x.png" alt="..." caption="..." zoomable=true %}
+  Image:   {% include figure.liquid path="assets/img/x.png" caption="..." zoomable=true %}
+  Diagram: {% include figure.liquid svg="diagrams/x.svg" caption="..." %}
+  size:    body (default) | small | wide | page   — figures are numbered automatically when captioned.
 {%- endcomment -%}
-<figure class="figure">
-  <img src="{{ include.path | relative_url }}" alt="{{ include.alt | default: include.caption | default: '' | escape }}" loading="{{ include.loading | default: 'lazy' }}" decoding="async"{% if include.zoomable %} data-zoomable{% endif %}>
-  {%- if include.caption %}<figcaption>{{ include.caption }}</figcaption>{% endif %}
+<figure class="figure figure-{{ include.size | default: 'body' }}{% if include.svg %} diagram{% endif %}">
+{%- if include.svg %}
+<div class="d-scroll">{% include {{ include.svg }} %}</div>
+{%- else %}
+<img src="{{ include.path | relative_url }}" alt="{{ include.alt | default: include.caption | default: '' | strip_html | escape }}" loading="{{ include.loading | default: 'lazy' }}" decoding="async"{% if include.zoomable %} data-zoomable{% endif %}>
+{%- endif %}
+{%- if include.caption %}
+<figcaption>{{ include.caption | markdownify | remove: '<p>' | remove: '</p>' | strip }}</figcaption>
+{%- endif %}
 </figure>

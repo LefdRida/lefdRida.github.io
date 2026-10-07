@@ -19,12 +19,28 @@
   --hl-number: #8a5a9e;
   --hl-name: #2f6a8a;
 
+  /* Diagram palette */
+  --d-line: #3d3d3a;
+  --d-group: #f3f1ea;
+  --d-group-stroke: #dcd8cb;
+  --d-attn: #e4dcef;
+  --d-ffn: #f5dccd;
+  --d-norm: #f1e8c7;
+  --d-embed: #d9e6d2;
+  --d-out: #d5e4ee;
+  --d-pos: #ece6f4;
+  --d-plain: #ffffff;
+  --d-a: #d97757;
+  --d-b: #5b8fc4;
+  --d-pos-cell: #d97757;
+  --d-neg-cell: #5b8fc4;
+
   --serif: "Source Serif 4", "Tiempos Text", Georgia, "Times New Roman", serif;
   --sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
   --wide: 1120px;
-  --measure: 700px;
+  --measure: 760px;
   --gutter: clamp(20px, 5vw, 48px);
   color-scheme: light;
 }
@@ -46,6 +62,20 @@
     --hl-string: #a9c27f;
     --hl-number: #c9a3dc;
     --hl-name: #8ec3e0;
+    --d-line: #c9c7be;
+    --d-group: #1c1b1a;
+    --d-group-stroke: #3a3936;
+    --d-attn: #3a3347;
+    --d-ffn: #4a3227;
+    --d-norm: #403a24;
+    --d-embed: #2c3a2a;
+    --d-out: #263744;
+    --d-pos: #302c38;
+    --d-plain: #262624;
+    --d-a: #e08a6d;
+    --d-b: #7aa9d8;
+    --d-pos-cell: #e08a6d;
+    --d-neg-cell: #7aa9d8;
     color-scheme: dark;
   }
 }
@@ -66,6 +96,20 @@
   --hl-string: #a9c27f;
   --hl-number: #c9a3dc;
   --hl-name: #8ec3e0;
+  --d-line: #c9c7be;
+  --d-group: #1c1b1a;
+  --d-group-stroke: #3a3936;
+  --d-attn: #3a3347;
+  --d-ffn: #4a3227;
+  --d-norm: #403a24;
+  --d-embed: #2c3a2a;
+  --d-out: #263744;
+  --d-pos: #302c38;
+  --d-plain: #262624;
+  --d-a: #e08a6d;
+  --d-b: #7aa9d8;
+  --d-pos-cell: #e08a6d;
+  --d-neg-cell: #7aa9d8;
   color-scheme: dark;
 }
 
@@ -539,7 +583,8 @@ h4 {
 
 @media (min-width: 1180px) {
   .post-layout {
-    grid-template-columns: 220px minmax(0, var(--measure)) 220px;
+    max-width: calc(1280px + 2 * var(--gutter));
+    grid-template-columns: 200px minmax(0, var(--measure)) 200px;
     gap: 0 56px;
   }
   .post-header,
@@ -706,22 +751,223 @@ h4 {
   border-radius: 4px;
 }
 
+/* ==========================================================================
+   Figures — numbered, left-aligned captions; wide figures break out of the text column
+   ========================================================================== */
+.prose {
+  counter-reset: figure;
+}
+
 .prose figure {
-  margin: 2em 0;
+  margin: 2.6em 0;
 }
 
-.prose figcaption,
-.prose figure + p[style] {
-  margin-top: 0.8em;
-  color: var(--faint) !important;
-  font: 400 14px/1.5 var(--sans) !important;
-  text-align: center;
+.figure img {
+  width: 100%;
+  background: #fff;
 }
 
-/* Inline-styled figure wrappers inherited from older posts */
-.prose div[style*="width: 45%"] {
-  width: 100% !important;
-  margin: 2em 0 !important;
+.figure-small > :not(figcaption) {
+  max-width: 560px;
+  margin-inline: auto;
+}
+
+.figure-wide,
+.figure-page {
+  --fig-w: min(960px, 100vw - 2 * var(--gutter) - 16px);
+  width: var(--fig-w);
+  margin-left: calc((100% - var(--fig-w)) / 2) !important;
+}
+
+.figure-page {
+  --fig-w: min(1120px, 100vw - 2 * var(--gutter) - 16px);
+}
+
+/* With the contents sidebar on the left, wide figures extend into the right margin only. */
+@media (min-width: 1180px) {
+  .figure-wide,
+  .figure-page {
+    width: calc(100% + 256px);
+    margin-left: 0 !important;
+  }
+}
+
+.figure figcaption {
+  counter-increment: figure;
+  max-width: var(--measure);
+  margin-top: 14px;
+  color: var(--muted);
+  font: 400 14px/1.55 var(--sans);
+}
+
+.figure figcaption::before {
+  content: "Figure " counter(figure) ". ";
+  color: var(--text);
+  font-weight: 600;
+}
+
+.figure figcaption mjx-container {
+  font-size: 105% !important;
+}
+
+/* Inline SVG diagrams: colours come from the theme tokens, so they follow light/dark mode.
+   On narrow screens they keep a legible size and scroll sideways instead of shrinking. */
+.d-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.figure-body .d-svg,
+.figure-small .d-svg {
+  min-width: 520px;
+}
+
+.figure-wide .d-svg,
+.figure-page .d-svg {
+  min-width: 760px;
+}
+
+.d-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  font-family: var(--sans);
+}
+
+.d-svg text {
+  fill: var(--text);
+  font-size: 13px;
+}
+
+.d-svg .d-sm {
+  font-size: 12px;
+}
+
+.d-svg .d-s {
+  fill: var(--muted);
+  font-size: 12px;
+}
+
+.d-svg .d-xs {
+  fill: var(--muted);
+  font-size: 11px;
+}
+
+.d-svg .d-sup,
+.d-svg .d-sub {
+  font-size: 9px;
+}
+
+.d-svg .d-strong {
+  fill: var(--text);
+  font-weight: 600;
+}
+
+.d-svg .d-muted {
+  fill: var(--muted);
+}
+
+.d-svg .d-accent {
+  fill: var(--accent-text);
+  font-weight: 500;
+}
+
+.d-svg .d-mono {
+  font-family: var(--mono);
+  font-size: 13px;
+}
+
+.d-svg .d-mono.d-sm {
+  font-size: 11.5px;
+}
+
+.d-svg .d-sentence {
+  font-family: var(--serif);
+  font-size: 19px;
+}
+
+.d-svg .d-title {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.d-svg .d-title.acc-a {
+  fill: var(--d-a);
+}
+
+.d-svg .d-title.acc-b {
+  fill: var(--d-b);
+}
+
+.d-svg .d-line {
+  fill: none;
+  stroke: var(--d-line);
+  stroke-width: 1.4;
+  stroke-linejoin: round;
+}
+
+.d-svg .d-head,
+.d-svg .d-dot {
+  fill: var(--d-line);
+}
+
+.d-svg .d-leader {
+  fill: none;
+  stroke: var(--faint);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+}
+
+.d-svg .d-op {
+  fill: var(--bg);
+  stroke: var(--d-line);
+  stroke-width: 1.4;
+}
+
+.d-svg .d-group {
+  fill: var(--d-group);
+  stroke: var(--d-group-stroke);
+}
+
+.d-svg .d-group.acc-a {
+  stroke: var(--d-a);
+  stroke-opacity: 0.55;
+}
+
+.d-svg .d-group.acc-b {
+  stroke: var(--d-b);
+  stroke-opacity: 0.55;
+}
+
+.d-svg .d-inset {
+  fill: var(--surface);
+  stroke: var(--rule);
+}
+
+.d-svg .b-attn { fill: var(--d-attn); }
+.d-svg .b-ffn { fill: var(--d-ffn); }
+.d-svg .b-norm { fill: var(--d-norm); }
+.d-svg .b-embed { fill: var(--d-embed); }
+.d-svg .b-out { fill: var(--d-out); }
+.d-svg .b-pos { fill: var(--d-pos); stroke: var(--d-group-stroke); }
+.d-svg .b-plain { fill: var(--d-plain); stroke: var(--d-group-stroke); }
+.d-svg .b-token { fill: color-mix(in srgb, var(--accent) 12%, var(--bg)); stroke: color-mix(in srgb, var(--accent) 55%, var(--bg)); }
+.d-svg .c-pos { fill: var(--d-pos-cell); }
+.d-svg .c-neg { fill: var(--d-neg-cell); }
+
+.d-svg .d-dashed,
+.d-svg .d-new {
+  stroke-dasharray: 4 3;
+}
+
+.d-svg .d-new {
+  stroke: var(--d-a);
+  stroke-width: 1.4;
+}
+
+.d-svg .d-dashed {
+  stroke: var(--faint);
 }
 
 .prose table {

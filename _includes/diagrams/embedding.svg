@@ -1,0 +1,156 @@
+<svg class="d-svg" viewBox="0 0 700 330" role="img" aria-label="Token ids mapped through the embedding layer to dense vectors"><defs><marker id="emb-arr" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,1 L10,5 L0,9 z" class="d-head"/></marker></defs>
+<text x="65" y="26" text-anchor="middle" class="d-s">tokens</text>
+<text x="200" y="26" text-anchor="middle" class="d-s">ids</text>
+<text x="504" y="26" text-anchor="middle" class="d-s">embeddings  (L × d_model)</text>
+<rect x="20" y="46" width="90" height="22" rx="5" class="b-token"/>
+<text x="65" y="61.5" text-anchor="middle" class="d-mono d-sm">The</text>
+<text x="200" y="61.5" text-anchor="middle" class="d-mono">791</text>
+<rect x="320" y="46" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.42"/>
+<rect x="349" y="46" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.66"/>
+<rect x="378" y="46" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.84"/>
+<rect x="407" y="46" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.15"/>
+<rect x="436" y="46" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.26"/>
+<rect x="465" y="46" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.29"/>
+<rect x="494" y="46" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.48"/>
+<rect x="523" y="46" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.90"/>
+<rect x="552" y="46" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.18"/>
+<rect x="581" y="46" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.58"/>
+<rect x="632" y="46" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.20"/>
+<rect x="661" y="46" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.27"/>
+<text x="618" y="61" text-anchor="middle" class="d-s">…</text>
+<rect x="20" y="74" width="90" height="22" rx="5" class="b-token"/>
+<text x="65" y="89.5" text-anchor="middle" class="d-mono d-sm">mind</text>
+<text x="200" y="89.5" text-anchor="middle" class="d-mono">4059</text>
+<rect x="320" y="74" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.22"/>
+<rect x="349" y="74" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.38"/>
+<rect x="378" y="74" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.21"/>
+<rect x="407" y="74" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.32"/>
+<rect x="436" y="74" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.89"/>
+<rect x="465" y="74" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.34"/>
+<rect x="494" y="74" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.63"/>
+<rect x="523" y="74" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.34"/>
+<rect x="552" y="74" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.16"/>
+<rect x="581" y="74" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.66"/>
+<rect x="632" y="74" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.42"/>
+<rect x="661" y="74" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.71"/>
+<text x="618" y="89" text-anchor="middle" class="d-s">…</text>
+<rect x="20" y="102" width="90" height="22" rx="5" class="b-token"/>
+<text x="65" y="117.5" text-anchor="middle" class="d-mono d-sm">of</text>
+<text x="200" y="117.5" text-anchor="middle" class="d-mono">315</text>
+<rect x="320" y="102" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.36"/>
+<rect x="349" y="102" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.55"/>
+<rect x="378" y="102" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.25"/>
+<rect x="407" y="102" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.19"/>
+<rect x="436" y="102" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.75"/>
+<rect x="465" y="102" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.46"/>
+<rect x="494" y="102" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.67"/>
+<rect x="523" y="102" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.58"/>
+<rect x="552" y="102" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.13"/>
+<rect x="581" y="102" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.42"/>
+<rect x="632" y="102" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.46"/>
+<rect x="661" y="102" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.62"/>
+<text x="618" y="117" text-anchor="middle" class="d-s">…</text>
+<rect x="20" y="130" width="90" height="22" rx="5" class="b-token"/>
+<text x="65" y="145.5" text-anchor="middle" class="d-mono d-sm">man</text>
+<text x="200" y="145.5" text-anchor="middle" class="d-mono">893</text>
+<rect x="320" y="130" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.51"/>
+<rect x="349" y="130" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.43"/>
+<rect x="378" y="130" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.21"/>
+<rect x="407" y="130" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.12"/>
+<rect x="436" y="130" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.75"/>
+<rect x="465" y="130" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.63"/>
+<rect x="494" y="130" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.52"/>
+<rect x="523" y="130" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.57"/>
+<rect x="552" y="130" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.13"/>
+<rect x="581" y="130" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.44"/>
+<rect x="632" y="130" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.61"/>
+<rect x="661" y="130" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.47"/>
+<text x="618" y="145" text-anchor="middle" class="d-s">…</text>
+<rect x="20" y="158" width="90" height="22" rx="5" class="b-token"/>
+<text x="65" y="173.5" text-anchor="middle" class="d-mono d-sm">is</text>
+<text x="200" y="173.5" text-anchor="middle" class="d-mono">374</text>
+<rect x="320" y="158" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.19"/>
+<rect x="349" y="158" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.17"/>
+<rect x="378" y="158" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.39"/>
+<rect x="407" y="158" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.39"/>
+<rect x="436" y="158" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.94"/>
+<rect x="465" y="158" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.32"/>
+<rect x="494" y="158" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.48"/>
+<rect x="523" y="158" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.14"/>
+<rect x="552" y="158" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.23"/>
+<rect x="581" y="158" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.82"/>
+<rect x="632" y="158" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.44"/>
+<rect x="661" y="158" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.65"/>
+<text x="618" y="173" text-anchor="middle" class="d-s">…</text>
+<rect x="20" y="186" width="90" height="22" rx="5" class="b-token"/>
+<text x="65" y="201.5" text-anchor="middle" class="d-mono d-sm">capable</text>
+<text x="200" y="201.5" text-anchor="middle" class="d-mono">13171</text>
+<rect x="320" y="186" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.59"/>
+<rect x="349" y="186" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.40"/>
+<rect x="378" y="186" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.23"/>
+<rect x="407" y="186" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.15"/>
+<rect x="436" y="186" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.71"/>
+<rect x="465" y="186" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.70"/>
+<rect x="494" y="186" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.45"/>
+<rect x="523" y="186" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.60"/>
+<rect x="552" y="186" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.14"/>
+<rect x="581" y="186" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.40"/>
+<rect x="632" y="186" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.65"/>
+<rect x="661" y="186" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.38"/>
+<text x="618" y="201" text-anchor="middle" class="d-s">…</text>
+<rect x="20" y="214" width="90" height="22" rx="5" class="b-token"/>
+<text x="65" y="229.5" text-anchor="middle" class="d-mono d-sm">of</text>
+<text x="200" y="229.5" text-anchor="middle" class="d-mono">315</text>
+<rect x="320" y="214" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.36"/>
+<rect x="349" y="214" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.55"/>
+<rect x="378" y="214" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.25"/>
+<rect x="407" y="214" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.19"/>
+<rect x="436" y="214" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.75"/>
+<rect x="465" y="214" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.46"/>
+<rect x="494" y="214" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.67"/>
+<rect x="523" y="214" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.58"/>
+<rect x="552" y="214" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.13"/>
+<rect x="581" y="214" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.42"/>
+<rect x="632" y="214" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.46"/>
+<rect x="661" y="214" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.62"/>
+<text x="618" y="229" text-anchor="middle" class="d-s">…</text>
+<rect x="20" y="242" width="90" height="22" rx="5" class="b-token"/>
+<text x="65" y="257.5" text-anchor="middle" class="d-mono d-sm">anything</text>
+<text x="200" y="257.5" text-anchor="middle" class="d-mono">4205</text>
+<rect x="320" y="242" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.49"/>
+<rect x="349" y="242" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.47"/>
+<rect x="378" y="242" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.92"/>
+<rect x="407" y="242" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.25"/>
+<rect x="436" y="242" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.34"/>
+<rect x="465" y="242" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.25"/>
+<rect x="494" y="242" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.31"/>
+<rect x="523" y="242" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.90"/>
+<rect x="552" y="242" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.38"/>
+<rect x="581" y="242" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.59"/>
+<rect x="632" y="242" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.31"/>
+<rect x="661" y="242" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.16"/>
+<text x="618" y="257" text-anchor="middle" class="d-s">…</text>
+<rect x="20" y="270" width="90" height="22" rx="5" class="b-token"/>
+<text x="65" y="285.5" text-anchor="middle" class="d-mono d-sm">.</text>
+<text x="200" y="285.5" text-anchor="middle" class="d-mono">13</text>
+<rect x="320" y="270" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.93"/>
+<rect x="349" y="270" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.39"/>
+<rect x="378" y="270" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.33"/>
+<rect x="407" y="270" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.24"/>
+<rect x="436" y="270" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.18"/>
+<rect x="465" y="270" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.87"/>
+<rect x="494" y="270" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.55"/>
+<rect x="523" y="270" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.51"/>
+<rect x="552" y="270" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.37"/>
+<rect x="581" y="270" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.12"/>
+<rect x="632" y="270" width="26" height="22" rx="3" class="c-neg" fill-opacity="0.63"/>
+<rect x="661" y="270" width="26" height="22" rx="3" class="c-pos" fill-opacity="0.62"/>
+<text x="618" y="285" text-anchor="middle" class="d-s">…</text>
+<path d="M118,169 L166,169" class="d-line" marker-end="url(#emb-arr)"/>
+<text x="142" y="159" text-anchor="middle" class="d-xs">lookup</text>
+<path d="M234,169 L306,169" class="d-line" marker-end="url(#emb-arr)"/>
+<text x="270" y="147" text-anchor="middle" class="d-xs">embedding</text>
+<text x="270" y="159" text-anchor="middle" class="d-xs">layer</text>
+<path d="M320,316 L688,316" class="d-leader"/>
+<text x="504" y="310" text-anchor="middle" class="d-xs">d_model = 512</text>
+</svg>

@@ -14,7 +14,7 @@ bundle exec jekyll serve
 | What | Where |
 | --- | --- |
 | Blog posts | `_posts/` (Markdown; `$$…$$` for math) |
-| Home, Writing, Publications, CV, 404 | `_pages/` |
+| Home, Blogs, Publications, CV, 404 | `_pages/` |
 | Publications | `_data/publications.yml` |
 | CV | `_data/resume.json` |
 | Name, links, nav | `_config.yml` |

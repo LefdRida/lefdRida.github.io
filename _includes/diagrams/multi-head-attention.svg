@@ -1,0 +1,44 @@
+<svg class="d-svg" viewBox="0 0 640 430" role="img" aria-label="Multi-head attention: h parallel scaled dot-product attention heads"><defs><marker id="mha-arr" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,1 L10,5 L0,9 z" class="d-head"/></marker></defs>
+<rect x="210" y="46" width="100" height="28" rx="6" class="b-out"/>
+<text x="260" y="64.5" text-anchor="middle" class="d-t">Linear</text>
+<path d="M260,46 L260,16" class="d-line" marker-end="url(#mha-arr)"/>
+<rect x="200" y="106" width="120" height="28" rx="6" class="b-norm"/>
+<text x="260" y="124.5" text-anchor="middle" class="d-t">Concat</text>
+<path d="M260,106 L260,74" class="d-line" marker-end="url(#mha-arr)"/>
+<rect x="146" y="170" width="260" height="48" rx="6" class="b-attn" opacity="0.35"/>
+<rect x="138" y="178" width="260" height="48" rx="6" class="b-attn" opacity="0.6"/>
+<rect x="130" y="186" width="260" height="48" rx="6" class="b-attn"/>
+<text x="260" y="206.5" text-anchor="middle" class="d-t">Scaled dot-product</text>
+<text x="260" y="222.5" text-anchor="middle" class="d-t">attention</text>
+<path d="M260,186 L260,134" class="d-line" marker-end="url(#mha-arr)"/>
+<rect x="121" y="284" width="90" height="28" rx="6" class="b-out" opacity="0.35"/>
+<rect x="113" y="292" width="90" height="28" rx="6" class="b-out" opacity="0.6"/>
+<rect x="105" y="300" width="90" height="28" rx="6" class="b-out"/>
+<text x="150" y="318.5" text-anchor="middle" class="d-t">Linear</text>
+<path d="M150,300 L150,234" class="d-line" marker-end="url(#mha-arr)"/>
+<path d="M150,392 L150,328" class="d-line" marker-end="url(#mha-arr)"/>
+<text x="150" y="412" text-anchor="middle" class="d-t d-strong">V</text>
+<rect x="231" y="284" width="90" height="28" rx="6" class="b-out" opacity="0.35"/>
+<rect x="223" y="292" width="90" height="28" rx="6" class="b-out" opacity="0.6"/>
+<rect x="215" y="300" width="90" height="28" rx="6" class="b-out"/>
+<text x="260" y="318.5" text-anchor="middle" class="d-t">Linear</text>
+<path d="M260,300 L260,234" class="d-line" marker-end="url(#mha-arr)"/>
+<path d="M260,392 L260,328" class="d-line" marker-end="url(#mha-arr)"/>
+<text x="260" y="412" text-anchor="middle" class="d-t d-strong">K</text>
+<rect x="341" y="284" width="90" height="28" rx="6" class="b-out" opacity="0.35"/>
+<rect x="333" y="292" width="90" height="28" rx="6" class="b-out" opacity="0.6"/>
+<rect x="325" y="300" width="90" height="28" rx="6" class="b-out"/>
+<text x="370" y="318.5" text-anchor="middle" class="d-t">Linear</text>
+<path d="M370,300 L370,234" class="d-line" marker-end="url(#mha-arr)"/>
+<path d="M370,392 L370,328" class="d-line" marker-end="url(#mha-arr)"/>
+<text x="370" y="412" text-anchor="middle" class="d-t d-strong">Q</text>
+<path d="M414,170 L422,170 L422,218 L414,218" class="d-leader"/>
+<path d="M316,60 L446,60" class="d-leader"/>
+<text x="454" y="64" text-anchor="start" class="d-s">output projection W<tspan class="d-sup" dy="-5">O</tspan></text>
+<path d="M326,120 L446,120" class="d-leader"/>
+<text x="454" y="124" text-anchor="start" class="d-s">join the h head outputs</text>
+<path d="M428,194 L446,194" class="d-leader"/>
+<text x="454" y="198" text-anchor="start" class="d-s">h heads in parallel</text>
+<path d="M437,314 L446,314" class="d-leader"/>
+<text x="454" y="318" text-anchor="start" class="d-s">per-head projections</text>
+</svg>

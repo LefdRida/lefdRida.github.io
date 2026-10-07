@@ -16,7 +16,7 @@ social:
 
 # Navigation, in display order
 nav:
-  - title: Writing
+  - title: Blogs
     url: /posts/
   - title: Publications
     url: /publications/
